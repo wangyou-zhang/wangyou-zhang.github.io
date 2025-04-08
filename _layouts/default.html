@@ -5,6 +5,8 @@ layout: compress
 {% include base_path %}
 
 <!doctype html>
+<meta charset="utf-8">
+<script src="/assets/js/distillpub/template.v2.js"></script>
 <html lang="{{ site.locale | slice: 0,2 }}" class="no-js"{% if site.site_theme == "dark" %} data-theme="dark"{% endif %}>
   <head>
     {% include head.html %}
@@ -26,6 +28,10 @@ layout: compress
     </div>
 
     {% include scripts.html %}
+
+    {%- if page.bibliography -%}
+      <d-bibliography src="{{ page.bibliography | prepend: '/assets/bibliography/' | relative_url }}"></d-bibliography>
+    {%- endif -%}
 
   </body>
 </html>
