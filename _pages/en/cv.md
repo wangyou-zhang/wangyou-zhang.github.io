@@ -33,6 +33,12 @@ Work Experience
 * **[2025-now]** Assistant Professor
   * School of Artificial Intelligence, Shanghai Jiao Tong University
 
+Research Interests
+======
+* Speech Signal Processing: Speech Enhancement, Speech Separation, Target Speaker Extraction
+* Robust Speech Recognition
+* Self-Supervised Speech Pre-training
+
 Publications
 ======
 <!-- <ul>{% for post in site.publications reversed %}
