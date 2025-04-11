@@ -27,6 +27,38 @@ $(document).ready(function () {
     toggleTheme();
   });
 
+  // Set the locale on page load
+  var setLocale = function (locale) {
+    const use_locale = locale || localStorage.getItem("mylocale") || $("html").attr("data-locale");
+    if (use_locale === "en") {
+      $("html").attr("data-locale", "en");
+      $("#locale-icon").attr("src", "/images/english-to-chinese.svg");
+      $("#locale-icon").attr("title", "Toggle locale (→ zh-CN)");
+    } else if (use_locale === "zh-CN") {
+      $("html").attr("data-locale", "zh-CN");
+      $("#locale-icon").attr("src", "/images/chinese-to-english.svg");
+      $("#locale-icon").attr("title", "Toggle locale (→ en)");
+    }
+  }
+  setLocale();
+
+  // Switch the locale
+  var switchLocale = function () {
+    const current_locale = $("html").attr("data-locale");
+    const new_locale = current_locale === "en" ? "zh-CN" : "en";
+    localStorage.setItem("mylocale", new_locale);
+    setLocale(new_locale);
+    // if current url is not in the same locale, redirect it
+    const current_url = window.location.href;
+    const current_path = window.location.pathname;
+    const current_locale_path = current_path.replace(/\/(en|zh-CN)/, `/${new_locale}`);
+    const new_url = current_url.replace(current_path, current_locale_path);
+    $(location).prop('href', new_url);
+  }
+  $('#locale-toggle').on('click', function () {
+    switchLocale();
+  });
+
   // These should be the same as the settings in _variables.scss
   const scssLarge = 925; // pixels
 

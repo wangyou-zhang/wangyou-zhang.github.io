@@ -7,7 +7,7 @@
 # server process.
 
 # Basic Site Settings
-locale                   : "zh-CN" # "en-US"
+locale                   : "zh-CN" # "en"
 site_theme               : "default"
 title                    : "Wangyou's Personal Website"
 title_separator          : "-"

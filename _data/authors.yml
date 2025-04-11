@@ -16,3 +16,36 @@ Name2 Name2:
   avatar      : "bio-photo.jpg"
   twitter     : "name2"
   google_plus : "Name"
+
+en:
+  avatar           : "profile.png"
+  name             : "Wangyou Zhang"
+  pronouns         : # example: "she/her"  
+  bio              : "Assistant Professor"
+  location         : "School of Artificial Intelligence,<br/>No. 1954 Huashan Road,<br/>Xuhui District, Shanghai, China"
+  employer         : "Shanghai Jiao Tong University"
+  uri              : # URL
+  email            : "zwyemrys@gmail.com" 
+  # Academic websites
+  googlescholar    : "https://scholar.google.com.hk/citations?user=LQ_ApskAAAAJ"
+  # Repositories and software development
+  github           : "Emrys365"
+  # Social media
+  linkedin         : wangyou-zhang
+
+
+zh-CN:
+  avatar           : "profile.png"
+  name             : "张王优"
+  pronouns         : # example: "she/her"  
+  bio              : "助理教授"
+  location         : "人工智能学院<br/>上海市徐汇区华山路 1954 号"
+  employer         : "上海交通大学"
+  uri              : # URL
+  email            : "zwyemrys@gmail.com" 
+  # Academic websites
+  googlescholar    : "https://scholar.google.com.hk/citations?user=LQ_ApskAAAAJ"
+  # Repositories and software development
+  github           : "Emrys365"
+  # Social media
+  linkedin         : wangyou-zhang

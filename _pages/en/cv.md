@@ -1,10 +1,13 @@
 ---
 layout: archive
-title: "CV"
-permalink: /cv/
+title: "Resume"
+permalink: /en/cv/
 author_profile: true
+locale: en
 redirect_from:
-  - /resume
+  - /en/cv.html
+  - /en/resume
+  - /en/resume.html
 ---
 
 {% include base_path %}
@@ -38,7 +41,7 @@ Publications
 
 > You can find the full publication list in [my Google Scholar profile]({{site.author.googlescholar}}).
 
-Till 2024-04-08, I have published 41 high-quality journal and conference papers (17 first-authored), including:
+Till 2025-04-08, I have published 41 high-quality journal and conference papers (17 first-authored), including:
 * TASLP: 2
 * SPM: 1
 * Applied Sciences: 1
@@ -88,11 +91,13 @@ Selected Honors
 
 Academic Activities
 ======
-* **[2024.01-2024.10]** [URGENT 2025 Challenge](https://urgent-challenge.github.io/urgent2025/)
-  * Project member
-* **[2024.01-2024.10]** [URGENT 2024 Challenge](https://urgent-challenge.github.io/urgent2024/)
-  * Project lead
+* **[2024.11-2025.01]** [URGENT 2025 Challenge](https://urgent-challenge.github.io/urgent2025/)
+  * In total 20 participating teams worldwide
+  * Role: Project member
+* **[2024.06-2024.09]** [URGENT 2024 Challenge](https://urgent-challenge.github.io/urgent2024/)
+  * In total 21 participating teams worldwide
+  * Role: Project lead
 * **[2020.06-2020.08]** 2020 Seventh Jelinek Memorial Summer Workshop on Speech and Language Technologies ([JSALT 2020](https://www.clsp.jhu.edu/workshops/20-workshop/))
   * Project: Speech Recognition and Diarization for Unsegmented Multi-talker Recordings with Speaker Overlaps
   * Topic: Joint Optimization of Convolutional Beamformer and ASR
-  * Core developer
+  * Role: Core developer

@@ -8,26 +8,52 @@
 #      Markdown formatted page while the second is generated using JSON.
 
 main:
-  - title: "Publications"
-    url: /publications/
+  en:
+    - title: "Publications"
+      url: /en/publications/
 
-  # - title: "Talks"
-  #   url: /talks/    
+    # - title: "Talks"
+    #   url: /en/talks/
 
-  # - title: "Teaching"
-  #   url: /teaching/    
-    
-  # - title: "Portfolio"
-  #   url: /portfolio/
-        
-  # - title: "Blog Posts"
-  #   url: /year-archive/
-    
-  - title: "CV"
-    url: /cv/
-    
-  # - title: "CV"
-  #   url: /cv-json/
-    
-  # - title: "Guide"
-  #   url: /markdown/
+    # - title: "Teaching"
+    #   url: /en/teaching/
+
+    # - title: "Portfolio"
+    #   url: /en/portfolio/
+
+    # - title: "Blog Posts"
+    #   url: /en/year-archive/
+
+    - title: "Resume"
+      url: /en/cv/
+
+    # - title: "Resume"
+    #   url: /en/cv-json/
+
+    # - title: "Guide"
+    #   url: /en/markdown/
+
+  zh-CN:
+    - title: "学术论文列表"
+      url: /zh-CN/publications/
+
+    # - title: "讲座"
+    #   url: /zh-CN/talks/
+
+    # - title: "教学"
+    #   url: /zh-CN/teaching/
+
+    # - title: "作品集"
+    #   url: /zh-CN/portfolio/
+
+    # - title: "博客文章"
+    #   url: /zh-CN/year-archive/
+
+    - title: "个人简历"
+      url: /zh-CN/cv/
+
+    # - title: "个人简历"
+    #   url: /zh-CN/cv-json/
+
+    # - title: "指南"
+    #   url: /zh-CN/markdown/

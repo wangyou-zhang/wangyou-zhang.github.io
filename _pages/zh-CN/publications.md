@@ -1,25 +1,26 @@
 ---
 layout: archive
-title: "Publications"
-permalink: /publications/
+title: "学术论文列表"
+permalink: /zh-CN/publications/
+locale: zh-CN
 author_profile: true
 redirect_from:
-  - /pub
+  - /zh-CN/publications.html
 bibliography: publications.bib
 ---
 
 {% include base_path %}
 
-Journal Papers
+期刊论文
 ======
 1. [SPM 2024] Module-Based End-to-End Distant Speech Processing: A Case Study of Far-Field Automatic Speech Recognition<d-cite key="Module_Based-Chang2024"/>
 2. [Applied Sciences 2023] Two-Stage Single-Channel Speech Enhancement with Multi-Frame Filtering<d-cite key="Two_Stage-Lin2023"/>
 3. [TASLP 2022] End-to-End Dereverberation, Beamforming, and Speech Recognition in A Cocktail Party<d-cite key="End_to_End-Zhang2022"/>
 4. [TASLP 2020] Improving End-to-End Single-Channel Multi-Talker Speech Recognition<d-cite key="Improving-Zhang2020"/>
 
-Conference Papers
+会议论文
 ======
-1. [EMNLP 2024] Towards Robust Speech Representation Learning for Thousands of Languages<d-cite key="Towards-Chen2024"/> <span style="color:red;">(Best Paper Award)</span>
+1. [EMNLP 2024] Towards Robust Speech Representation Learning for Thousands of Languages<d-cite key="Towards-Chen2024"/> <span style="color:red;">（最佳论文奖）</span>
 2. [ISCSLP 2024] Insights from Hyperparameter Scaling of Online Speech Separation<d-cite key="Insights-Zhou2024"/>
 3. [Interspeech 2024] URGENT Challenge: Universality, Robustness, and Generalizability For Speech Enhancement<d-cite key="URGENT-Zhang2024"/>
 4. [Interspeech 2024] Beyond Performance Plateaus: A Comprehensive Study on Scalability in Speech Enhancement<d-cite key="Beyond-Zhang2024"/>
@@ -39,7 +40,7 @@ Conference Papers
 18. [Interspeech 2022] Separating Long-form Speech with Group-wise Permutation Invariant Training<d-cite key="Separating-Zhang2022"/>
 19. [Interspeech 2022] ESPnet-SE++: Speech Enhancement for Robust Speech Recognition, Translation, and Understanding<d-cite key="ESPnet_SE-Lu2022"/>
 20. [ICASSP 2022] The SJTU System for Multimodal Information Based Speech Processing Challenge 2021<d-cite key="SJTU-Wang2022"/>
-21. [ICASSP 2022] Towards Low-Distortion Multi-Channel Speech Enhancement: The ESPnet-SE Submission to the L3DAS22 Challenge<d-cite key="Towards-Lu2022"/> <span style="color:red;">(First Place in the 3D Speech Enhancement Task of L3DAS22 Challenge)</span>
+21. [ICASSP 2022] Towards Low-Distortion Multi-Channel Speech Enhancement: The ESPnet-SE Submission to the L3DAS22 Challenge<d-cite key="Towards-Lu2022"/> <span style="color:red;">（L3DAS22 比赛的 3D Speech Enhancement 任务第一名）</span>
 22. [ICASSP 2022] Text Adaptive Detection for Customizable Keyword Spotting<d-cite key="Text-Xi2022"/>
 23. [ICASSP 2022] Exploring Effective Data Utilization for Low-Resource Speech Recognition<d-cite key="Exploring-Zhou2022"/>
 24. [WASPAA 2021] Closing the Gap Between Time-domain Multi-channel Speech Enhancement on Real and Simulation Conditions<d-cite key="Closing-Zhang2021"/>
@@ -52,7 +53,7 @@ Conference Papers
 31. [Interspeech 2020] Learning Contextual Language Embeddings for Monaural Multi-Talker Speech Recognition<d-cite key="Learning-Zhang2020"/>
 32. [ICASSP 2020] End-To-End Multi-Speaker Speech Recognition With Transformer<d-cite key="End_To_End-Chang2020"/>
 33. [ASRU 2019] End-to-End Overlapped Speech Detection and Speaker Counting with Raw Waveform<d-cite key="End_to_End-Zhang2019"/>
-34. [ASRU 2019] MIMO-Speech: End-to-End Multi-Channel Multi-Speaker Speech Recognition<d-cite key="MIMO_Speech-Chang2019"/> <span style="color:red;">(Best Paper Award)</span>
+34. [ASRU 2019] MIMO-Speech: End-to-End Multi-Channel Multi-Speaker Speech Recognition<d-cite key="MIMO_Speech-Chang2019"/> <span style="color:red;">（最佳论文奖）</span>
 35. [ASRU 2019] A Comparative Study on Transformer vs RNN in Speech Applications<d-cite key="Comparative-Karita2019"/>
 36. [Interspeech 2019] Knowledge Distillation for End-to-End Monaural Multitalker ASR System<d-cite key="Knowledge-Zhang2019"/>
 37. [Interspeech 2019] Robust DOA Estimation Based on Convolutional Neural Network and Time-Frequency Masking<d-cite key="Robust-Zhang2019"/>

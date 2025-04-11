@@ -1,0 +1,25 @@
+---
+layout: redirectme
+---
+
+{% include base_path %}
+
+<!doctype html>
+<meta charset="utf-8">
+<!-- Redirect to about.md depending on the current locale using JS -->
+<script>
+  const use_locale = localStorage.getItem("mylocale") || "{{ site.locale }}";
+  const current_path = window.location.pathname;
+  var current_locale_path;
+  if (current_path.startsWith('/en/') || current_path.startsWith('/zh-CN/')) {
+    current_locale_path = current_path.replace(/\/(en|zh-CN)/, `/${use_locale}`);
+  } else {
+    if (current_path.startsWith('/')) {
+      current_locale_path = "/" + use_locale + current_path;
+    } else {
+      current_locale_path = "/" + use_locale + "/" + current_path;
+    }
+  }
+  window.location.assign(current_locale_path);
+
+</script>
