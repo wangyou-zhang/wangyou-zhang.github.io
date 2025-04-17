@@ -273,6 +273,16 @@ svg:not(:root) {
   overflow: hidden;
 }
 
+/* Change SVG color dynamically */
+
+#locale-icon {
+  filter: var(--global-svg-filter);
+}
+
+/* Highlight colors */
+.highlight-red {
+  color: red;
+}
 
 /*
    Navigation lists

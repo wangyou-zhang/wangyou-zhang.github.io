@@ -477,7 +477,7 @@
     };
   };
 
-  var math = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nspan.katex-display {\n  text-align: left;\n  padding: 8px 0 8px 0;\n  margin: 0.5em 0 0.5em 1em;\n}\n\nspan.katex {\n  -webkit-font-smoothing: antialiased;\n  color: rgba(0, 0, 0, 0.8);\n  font-size: 1.18em;\n}\n";
+  var math = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nspan.katex-display {\n  text-align: left;\n  padding: 8px 0 8px 0;\n  margin: 0.5em 0 0.5em 1em;\n}\n\nspan.katex {\n  -webkit-font-smoothing: antialiased;\n  color: var(--global-text-color);\n  font-size: 1.18em;\n}\n";
 
   // Copyright 2018 The Distill Template Authors
   //
@@ -879,9 +879,9 @@ ${math}
     if (names.length > 1) {
       var str = name_strings.slice(0, names.length - 1).join(sep);
       str += (finalSep || sep) + name_strings[names.length - 1];
-      return str;
+      return renderAuthorUnicode(str);
     } else {
-      return name_strings[0];
+      return renderAuthorUnicode(name_strings[0]);
     }
   }
 
@@ -893,7 +893,7 @@ ${math}
       cite += ", Vol " + ent.volume + issue;
     }
     if ("pages" in ent) {
-      cite += ", pp. " + ent.pages;
+      cite += ", pp. " + renderPageUnicode(ent.pages);
     }
     if (cite != "") cite += ". ";
     if ("publisher" in ent) {
@@ -916,7 +916,7 @@ ${math}
       } else if (url.slice(-5) == ".html") {
         var label = "HTML";
       }
-      return ` &ensp;<a href="${url}">[${label || "link"}]</a>`;
+      return ` &ensp;<a href="${url}" style="color:var(--global-link-color)">[${label || "link"}]</a>`;
     } /* else if ("doi" in ent){
       return ` &ensp;<a href="https://doi.org/${ent.doi}" >[DOI]</a>`;
     }*/ else {
@@ -927,20 +927,50 @@ ${math}
     if ("doi" in ent) {
       return `${new_line ? "<br>" : ""} <a href="https://doi.org/${
       ent.doi
-    }" style="text-decoration:inherit;">DOI: ${ent.doi}</a>`;
+    }" style="text-decoration:inherit; color:var(--global-link-color)">DOI: ${ent.doi}</a>`;
     } else {
       return "";
     }
   }
 
   function title_string(ent) {
-    return '<span class="title">' + ent.title + "</span> ";
+    return '<span class="title">' + normalizeTitleField(ent.title, false) + "</span> ";
+  }
+
+  function entry_to_bibtex(ent) {
+    var out = '';
+    out += "@" + ent['type'];
+    out += '{';
+    if (ent['citationkey'])
+      out += ent['citationkey'] + ',\n';
+    else
+      out += 'citationKey,\n';
+    // if (ent.entry)
+    //   out += ent.entry;
+    var tags = '';
+    for (var jdx in ent) {
+      if (jdx == 'entrytype' || jdx == 'citationkey' || jdx == 'type' || jdx == 'entry')
+        continue;
+      if (tags.length != 0)
+        tags += ',\n';
+      tags += "  " + jdx + '={' + ent[jdx] + '}';
+    }
+    out += tags;
+    out += '\n}';
+    return out;
+  }
+
+  function bibtex_button_string(ent) {
+    const bibtexString = entry_to_bibtex(ent);
+    var citationKey = ent['citationkey'] ? ent['citationkey'] : 'citationKey';
+
+    return '<button class="copy-to-clipboard-button" id="btn-' + encodeURI(citationKey) + '" data-copy-text="' + encodeURI(bibtexString) + '">Copy BibTeX</button>';
   }
 
   function bibliography_cite(ent, fancy) {
     if (ent) {
       var cite = title_string(ent);
-      cite += link_string(ent) + "<br>";
+      cite += link_string(ent) + " " + bibtex_button_string(ent) + "<br>";
       if (ent.author) {
         cite += author_string(ent, "${F} ${L}", ", ", " and ");
         if (ent.year || ent.date) {
@@ -974,8 +1004,9 @@ ${math}
   function hover_cite(ent) {
     if (ent) {
       var cite = "";
-      cite += "<strong>" + ent.title + "</strong>";
+      cite += "<strong>" + normalizeTitleField(ent.title, false) + "</strong>";
       cite += link_string(ent);
+      cite += " " + bibtex_button_string(ent);
       cite += "<br>";
 
       var a_str = author_string(ent, "${F} ${L}", ", ") + ".";
@@ -1361,15 +1392,15 @@ ${math}
     } // listeners
   }; // Controller
 
-  var base = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nhtml {\n  font-size: 14px;\n\tline-height: 1.6em;\n  /* font-family: \"Libre Franklin\", \"Helvetica Neue\", sans-serif; */\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", Arial, sans-serif;\n  /*, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\";*/\n  text-size-adjust: 100%;\n  -ms-text-size-adjust: 100%;\n  -webkit-text-size-adjust: 100%;\n}\n\n@media(min-width: 768px) {\n  html {\n    font-size: 16px;\n  }\n}\n\nbody {\n  margin: 0;\n}\n\na {\n  color: #004276;\n}\n\nfigure {\n  margin: 0;\n}\n\ntable {\n\tborder-collapse: collapse;\n\tborder-spacing: 0;\n}\n\ntable th {\n\ttext-align: left;\n}\n\ntable thead {\n  border-bottom: 1px solid rgba(0, 0, 0, 0.05);\n}\n\ntable thead th {\n  padding-bottom: 0.5em;\n}\n\ntable tbody :first-child td {\n  padding-top: 0.5em;\n}\n\npre {\n  overflow: auto;\n  max-width: 100%;\n}\n\np {\n  margin-top: 0;\n  margin-bottom: 1em;\n}\n\nsup, sub {\n  vertical-align: baseline;\n  position: relative;\n  top: -0.4em;\n  line-height: 1em;\n}\n\nsub {\n  top: 0.4em;\n}\n\n.kicker,\n.marker {\n  font-size: 15px;\n  font-weight: 600;\n  color: rgba(0, 0, 0, 0.5);\n}\n\n\n/* Headline */\n\n@media(min-width: 1024px) {\n  d-title h1 span {\n    display: block;\n  }\n}\n\n/* Figure */\n\nfigure {\n  position: relative;\n  margin-bottom: 2.5em;\n  margin-top: 1.5em;\n}\n\nfigcaption+figure {\n\n}\n\nfigure img {\n  width: 100%;\n}\n\nfigure svg text,\nfigure svg tspan {\n}\n\nfigcaption,\n.figcaption {\n  color: rgba(0, 0, 0, 0.6);\n  font-size: 12px;\n  line-height: 1.5em;\n}\n\n@media(min-width: 1024px) {\nfigcaption,\n.figcaption {\n    font-size: 13px;\n  }\n}\n\nfigure.external img {\n  background: white;\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);\n  padding: 18px;\n  box-sizing: border-box;\n}\n\nfigcaption a {\n  color: rgba(0, 0, 0, 0.6);\n}\n\nfigcaption b,\nfigcaption strong, {\n  font-weight: 600;\n  color: rgba(0, 0, 0, 1.0);\n}\n";
+  var base = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nhtml {\n  font-size: 14px;\n\tline-height: 1.6em;\n  /* font-family: \"Libre Franklin\", \"Helvetica Neue\", sans-serif; */\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", Arial, sans-serif;\n  /*, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\";*/\n  text-size-adjust: 100%;\n  -ms-text-size-adjust: 100%;\n  -webkit-text-size-adjust: 100%;\n}\n\n@media(min-width: 768px) {\n  html {\n    font-size: 16px;\n  }\n}\n\nbody {\n  margin: 0;\n}\n\na {\n  color: #004276;\n}\n\nfigure {\n  margin: 0;\n}\n\ntable {\n\tborder-collapse: collapse;\n\tborder-spacing: 0;\n}\n\ntable th {\n\ttext-align: left;\n}\n\ntable thead {\n  border-bottom: 1px solid var(--global-dark-border-color);\n}\n\ntable thead th {\n  padding-bottom: 0.5em;\n}\n\ntable tbody :first-child td {\n  padding-top: 0.5em;\n}\n\npre {\n  overflow: auto;\n  max-width: 100%;\n}\n\np {\n  margin-top: 0;\n  margin-bottom: 1em;\n}\n\nsup, sub {\n  vertical-align: baseline;\n  position: relative;\n  top: -0.4em;\n  line-height: 1em;\n}\n\nsub {\n  top: 0.4em;\n}\n\n.kicker,\n.marker {\n  font-size: 15px;\n  font-weight: 600;\n  color: rgba(0, 0, 0, 0.5);\n}\n\n\n/* Headline */\n\n@media(min-width: 1024px) {\n  d-title h1 span {\n    display: block;\n  }\n}\n\n/* Figure */\n\nfigure {\n  position: relative;\n  margin-bottom: 2.5em;\n  margin-top: 1.5em;\n}\n\nfigcaption+figure {\n\n}\n\nfigure img {\n  width: 100%;\n}\n\nfigure svg text,\nfigure svg tspan {\n}\n\nfigcaption,\n.figcaption {\n  color: rgba(0, 0, 0, 0.6);\n  font-size: 12px;\n  line-height: 1.5em;\n}\n\n@media(min-width: 1024px) {\nfigcaption,\n.figcaption {\n    font-size: 13px;\n  }\n}\n\nfigure.external img {\n  background: white;\n  border: 1px solid var(--global-footer-bg-color);\n  box-shadow: 0 1px 8px var(--global-footer-bg-color);\n  padding: 18px;\n  box-sizing: border-box;\n}\n\nfigcaption a {\n  color: rgba(0, 0, 0, 0.6);\n}\n\nfigcaption b,\nfigcaption strong, {\n  font-weight: 600;\n  color: rgba(0, 0, 0, 1.0);\n}\n";
 
   var layout = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\n@supports not (display: grid) {\n  .base-grid,\n  distill-header,\n  d-title,\n  d-abstract,\n  d-article,\n  d-appendix,\n  distill-appendix,\n  d-byline,\n  d-footnote-list,\n  d-citation-list,\n  distill-footer {\n    display: block;\n    padding: 8px;\n  }\n}\n\n.base-grid,\ndistill-header,\nd-title,\nd-abstract,\nd-article,\nd-appendix,\ndistill-appendix,\nd-byline,\nd-footnote-list,\nd-citation-list,\ndistill-footer {\n  display: grid;\n  justify-items: stretch;\n  grid-template-columns: [screen-start] 8px [page-start kicker-start text-start gutter-start middle-start] 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr [text-end page-end gutter-end kicker-end middle-end] 8px [screen-end];\n  grid-column-gap: 8px;\n}\n\n.grid {\n  display: grid;\n  grid-column-gap: 8px;\n}\n\n@media(min-width: 768px) {\n  .base-grid,\n  distill-header,\n  d-title,\n  d-abstract,\n  d-article,\n  d-appendix,\n  distill-appendix,\n  d-byline,\n  d-footnote-list,\n  d-citation-list,\n  distill-footer {\n    grid-template-columns: [screen-start] 1fr [page-start kicker-start middle-start text-start] 45px 45px 45px 45px 45px 45px 45px 45px [ kicker-end text-end gutter-start] 45px [middle-end] 45px [page-end gutter-end] 1fr [screen-end];\n    grid-column-gap: 16px;\n  }\n\n  .grid {\n    grid-column-gap: 16px;\n  }\n}\n\n@media(min-width: 1000px) {\n  .base-grid,\n  distill-header,\n  d-title,\n  d-abstract,\n  d-article,\n  d-appendix,\n  distill-appendix,\n  d-byline,\n  d-footnote-list,\n  d-citation-list,\n  distill-footer {\n    grid-template-columns: [screen-start] 1fr [page-start kicker-start] 50px [middle-start] 50px [text-start kicker-end] 50px 50px 50px 50px 50px 50px 50px 50px [text-end gutter-start] 50px [middle-end] 50px [page-end gutter-end] 1fr [screen-end];\n    grid-column-gap: 16px;\n  }\n\n  .grid {\n    grid-column-gap: 16px;\n  }\n}\n\n@media(min-width: 1180px) {\n  .base-grid,\n  distill-header,\n  d-title,\n  d-abstract,\n  d-article,\n  d-appendix,\n  distill-appendix,\n  d-byline,\n  d-footnote-list,\n  d-citation-list,\n  distill-footer {\n    grid-template-columns: [screen-start] 1fr [page-start kicker-start] 60px [middle-start] 60px [text-start kicker-end] 60px 60px 60px 60px 60px 60px 60px 60px [text-end gutter-start] 60px [middle-end] 60px [page-end gutter-end] 1fr [screen-end];\n    grid-column-gap: 32px;\n  }\n\n  .grid {\n    grid-column-gap: 32px;\n  }\n}\n\n\n\n\n.base-grid {\n  grid-column: screen;\n}\n\n/* .l-body,\nd-article > *  {\n  grid-column: text;\n}\n\n.l-page,\nd-title > *,\nd-figure {\n  grid-column: page;\n} */\n\n.l-gutter {\n  grid-column: gutter;\n}\n\n.l-text,\n.l-body {\n  grid-column: text;\n}\n\n.l-page {\n  grid-column: page;\n}\n\n.l-body-outset {\n  grid-column: middle;\n}\n\n.l-page-outset {\n  grid-column: page;\n}\n\n.l-screen {\n  grid-column: screen;\n}\n\n.l-screen-inset {\n  grid-column: screen;\n  padding-left: 16px;\n  padding-left: 16px;\n}\n\n\n/* Aside */\n\nd-article aside {\n  grid-column: gutter;\n  font-size: 12px;\n  line-height: 1.6em;\n  color: rgba(0, 0, 0, 0.6)\n}\n\n@media(min-width: 768px) {\n  aside {\n    grid-column: gutter;\n  }\n\n  .side {\n    grid-column: gutter;\n  }\n}\n";
 
   var print = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\n@media print {\n\n  @page {\n    size: 8in 11in;\n    @bottom-right {\n      content: counter(page) \" of \" counter(pages);\n    }\n  }\n\n  html {\n    /* no general margins -- CSS Grid takes care of those */\n  }\n\n  p, code {\n    page-break-inside: avoid;\n  }\n\n  h2, h3 {\n    page-break-after: avoid;\n  }\n\n  d-header {\n    visibility: hidden;\n  }\n\n  d-footer {\n    display: none!important;\n  }\n\n}\n";
 
-  var byline = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nd-byline {\n  contain: style;\n  overflow: hidden;\n  border-top: 1px solid rgba(0, 0, 0, 0.1);\n  font-size: 0.8rem;\n  line-height: 1.8em;\n  padding: 1.5rem 0;\n  min-height: 1.8em;\n}\n\n\nd-byline .byline {\n  grid-template-columns: 1fr 1fr;\n  grid-column: text;\n}\n\n@media(min-width: 768px) {\n  d-byline .byline {\n    grid-template-columns: 1fr 1fr 1fr 1fr;\n  }\n}\n\nd-byline .authors-affiliations {\n  grid-column-end: span 2;\n  grid-template-columns: 1fr 1fr;\n  margin-bottom: 1em;\n}\n\n@media(min-width: 768px) {\n  d-byline .authors-affiliations {\n    margin-bottom: 0;\n  }\n}\n\nd-byline h3 {\n  font-size: 0.6rem;\n  font-weight: 400;\n  color: rgba(0, 0, 0, 0.5);\n  margin: 0;\n  text-transform: uppercase;\n}\n\nd-byline p {\n  margin: 0;\n}\n\nd-byline a,\nd-article d-byline a {\n  color: rgba(0, 0, 0, 0.8);\n  text-decoration: none;\n  border-bottom: none;\n}\n\nd-article d-byline a:hover {\n  text-decoration: underline;\n  border-bottom: none;\n}\n\nd-byline p.author {\n  font-weight: 500;\n}\n\nd-byline .affiliations {\n\n}\n";
+  var byline = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nd-byline {\n  contain: style;\n  overflow: hidden;\n  border-top: 1px solid var(--global-footer-bg-color);\n  font-size: 0.8rem;\n  line-height: 1.8em;\n  padding: 1.5rem 0;\n  min-height: 1.8em;\n}\n\n\nd-byline .byline {\n  grid-template-columns: 1fr 1fr;\n  grid-column: text;\n}\n\n@media(min-width: 768px) {\n  d-byline .byline {\n    grid-template-columns: 1fr 1fr 1fr 1fr;\n  }\n}\n\nd-byline .authors-affiliations {\n  grid-column-end: span 2;\n  grid-template-columns: 1fr 1fr;\n  margin-bottom: 1em;\n}\n\n@media(min-width: 768px) {\n  d-byline .authors-affiliations {\n    margin-bottom: 0;\n  }\n}\n\nd-byline h3 {\n  font-size: 0.6rem;\n  font-weight: 400;\n  color: rgba(0, 0, 0, 0.5);\n  margin: 0;\n  text-transform: uppercase;\n}\n\nd-byline p {\n  margin: 0;\n}\n\nd-byline a,\nd-article d-byline a {\n  color: rgba(0, 0, 0, 0.8);\n  text-decoration: none;\n  border-bottom: none;\n}\n\nd-article d-byline a:hover {\n  text-decoration: underline;\n  border-bottom: none;\n}\n\nd-byline p.author {\n  font-weight: 500;\n}\n\nd-byline .affiliations {\n\n}\n";
 
-  var article = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nd-article {\n  contain: layout style;\n  overflow-x: hidden;\n  border-top: 1px solid rgba(0, 0, 0, 0.1);\n  padding-top: 2rem;\n  color: rgba(0, 0, 0, 0.8);\n}\n\nd-article > * {\n  grid-column: text;\n}\n\n@media(min-width: 768px) {\n  d-article {\n    font-size: 16px;\n  }\n}\n\n@media(min-width: 1024px) {\n  d-article {\n    font-size: 1.06rem;\n    line-height: 1.7em;\n  }\n}\n\n\n/* H2 */\n\n\nd-article .marker {\n  text-decoration: none;\n  border: none;\n  counter-reset: section;\n  grid-column: kicker;\n  line-height: 1.7em;\n}\n\nd-article .marker:hover {\n  border: none;\n}\n\nd-article .marker span {\n  padding: 0 3px 4px;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n  position: relative;\n  top: 4px;\n}\n\nd-article .marker:hover span {\n  color: rgba(0, 0, 0, 0.7);\n  border-bottom: 1px solid rgba(0, 0, 0, 0.7);\n}\n\nd-article h2 {\n  font-weight: 600;\n  font-size: 24px;\n  line-height: 1.25em;\n  margin: 2rem 0 1.5rem 0;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n  padding-bottom: 1rem;\n}\n\n@media(min-width: 1024px) {\n  d-article h2 {\n    font-size: 36px;\n  }\n}\n\n/* H3 */\n\nd-article h3 {\n  font-weight: 700;\n  font-size: 18px;\n  line-height: 1.4em;\n  margin-bottom: 1em;\n  margin-top: 2em;\n}\n\n@media(min-width: 1024px) {\n  d-article h3 {\n    font-size: 20px;\n  }\n}\n\n/* H4 */\n\nd-article h4 {\n  font-weight: 600;\n  text-transform: uppercase;\n  font-size: 14px;\n  line-height: 1.4em;\n}\n\nd-article a {\n  color: inherit;\n}\n\nd-article p,\nd-article ul,\nd-article ol,\nd-article blockquote {\n  margin-top: 0;\n  margin-bottom: 1em;\n  margin-left: 0;\n  margin-right: 0;\n}\n\nd-article blockquote {\n  border-left: 2px solid rgba(0, 0, 0, 0.2);\n  padding-left: 2em;\n  font-style: italic;\n  color: rgba(0, 0, 0, 0.6);\n}\n\nd-article a {\n  border-bottom: 1px solid rgba(0, 0, 0, 0.4);\n  text-decoration: none;\n}\n\nd-article a:hover {\n  border-bottom: 1px solid rgba(0, 0, 0, 0.8);\n}\n\nd-article .link {\n  text-decoration: underline;\n  cursor: pointer;\n}\n\nd-article ul,\nd-article ol {\n  padding-left: 24px;\n}\n\nd-article li {\n  margin-bottom: 1em;\n  margin-left: 0;\n  padding-left: 0;\n}\n\nd-article li:last-child {\n  margin-bottom: 0;\n}\n\nd-article pre {\n  font-size: 14px;\n  margin-bottom: 20px;\n}\n\nd-article hr {\n  grid-column: screen;\n  width: 100%;\n  border: none;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n  margin-top: 60px;\n  margin-bottom: 60px;\n}\n\nd-article section {\n  margin-top: 60px;\n  margin-bottom: 60px;\n}\n\nd-article span.equation-mimic {\n  font-family: georgia;\n  font-size: 115%;\n  font-style: italic;\n}\n\nd-article > d-code,\nd-article section > d-code  {\n  display: block;\n  max-width: 100vw;\n}\n\nd-article > d-math[block],\nd-article section > d-math[block]  {\n  display: block;\n  max-width: 100vw;\n}\n\n@media (max-width: 100vw) {\n  d-article > d-code,\n  d-article section > d-code,\n  d-article > d-math[block],\n  d-article section > d-math[block] {\n      overflow-x: scroll;\n      -ms-overflow-style: none;  // IE 10+\n      overflow: -moz-scrollbars-none;  // Firefox\n  }\n\n  d-article > d-code::-webkit-scrollbar,\n  d-article section > d-code::-webkit-scrollbar,\n  d-article > d-math[block]::-webkit-scrollbar,\n  d-article section > d-math[block]::-webkit-scrollbar {\n    display: none;  // Safari and Chrome\n  }\n}\n\nd-article .citation {\n  color: #668;\n  cursor: pointer;\n}\n\nd-include {\n  width: auto;\n  display: block;\n}\n\nd-figure {\n  contain: layout style;\n}\n\n/* KaTeX */\n\n.katex, .katex-prerendered {\n  contain: style;\n  display: inline-block;\n}\n\n/* Tables */\n\nd-article table {\n  border-collapse: collapse;\n  margin-bottom: 1.5rem;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n\nd-article table th {\n  border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n\nd-article table td {\n  border-bottom: 1px solid rgba(0, 0, 0, 0.05);\n}\n\nd-article table tr:last-of-type td {\n  border-bottom: none;\n}\n\nd-article table th,\nd-article table td {\n  font-size: 15px;\n  padding: 2px 8px;\n}\n\nd-article table tbody :first-child td {\n  padding-top: 2px;\n}\n";
+  var article = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nd-article {\n  contain: layout style;\n  overflow-x: hidden;\n  border-top: 1px solid var(--global-footer-bg-color);\n  padding-top: 2rem;\n  color: rgba(0, 0, 0, 0.8);\n}\n\nd-article > * {\n  grid-column: text;\n}\n\n@media(min-width: 768px) {\n  d-article {\n    font-size: 16px;\n  }\n}\n\n@media(min-width: 1024px) {\n  d-article {\n    font-size: 1.06rem;\n    line-height: 1.7em;\n  }\n}\n\n\n/* H2 */\n\n\nd-article .marker {\n  text-decoration: none;\n  border: none;\n  counter-reset: section;\n  grid-column: kicker;\n  line-height: 1.7em;\n}\n\nd-article .marker:hover {\n  border: none;\n}\n\nd-article .marker span {\n  padding: 0 3px 4px;\n  border-bottom: 1px solid var(--global-dark-border-color);\n  position: relative;\n  top: 4px;\n}\n\nd-article .marker:hover span {\n  color: rgba(0, 0, 0, 0.7);\n  border-bottom: 1px solid rgba(0, 0, 0, 0.7);\n}\n\nd-article h2 {\n  font-weight: 600;\n  font-size: 24px;\n  line-height: 1.25em;\n  margin: 2rem 0 1.5rem 0;\n  border-bottom: 1px solid var(--global-footer-bg-color);\n  padding-bottom: 1rem;\n}\n\n@media(min-width: 1024px) {\n  d-article h2 {\n    font-size: 36px;\n  }\n}\n\n/* H3 */\n\nd-article h3 {\n  font-weight: 700;\n  font-size: 18px;\n  line-height: 1.4em;\n  margin-bottom: 1em;\n  margin-top: 2em;\n}\n\n@media(min-width: 1024px) {\n  d-article h3 {\n    font-size: 20px;\n  }\n}\n\n/* H4 */\n\nd-article h4 {\n  font-weight: 600;\n  text-transform: uppercase;\n  font-size: 14px;\n  line-height: 1.4em;\n}\n\nd-article a {\n  color: inherit;\n}\n\nd-article p,\nd-article ul,\nd-article ol,\nd-article blockquote {\n  margin-top: 0;\n  margin-bottom: 1em;\n  margin-left: 0;\n  margin-right: 0;\n}\n\nd-article blockquote {\n  border-left: 2px solid var(--global-dark-border-color);\n  padding-left: 2em;\n  font-style: italic;\n  color: rgba(0, 0, 0, 0.6);\n}\n\nd-article a {\n  border-bottom: 1px solid rgba(0, 0, 0, 0.4);\n  text-decoration: none;\n}\n\nd-article a:hover {\n  border-bottom: 1px solid rgba(0, 0, 0, 0.8);\n}\n\nd-article .link {\n  text-decoration: underline;\n  cursor: pointer;\n}\n\nd-article ul,\nd-article ol {\n  padding-left: 24px;\n}\n\nd-article li {\n  margin-bottom: 1em;\n  margin-left: 0;\n  padding-left: 0;\n}\n\nd-article li:last-child {\n  margin-bottom: 0;\n}\n\nd-article pre {\n  font-size: 14px;\n  margin-bottom: 20px;\n}\n\nd-article hr {\n  grid-column: screen;\n  width: 100%;\n  border: none;\n  border-bottom: 1px solid var(--global-footer-bg-color);\n  margin-top: 60px;\n  margin-bottom: 60px;\n}\n\nd-article section {\n  margin-top: 60px;\n  margin-bottom: 60px;\n}\n\nd-article span.equation-mimic {\n  font-family: georgia;\n  font-size: 115%;\n  font-style: italic;\n}\n\nd-article > d-code,\nd-article section > d-code  {\n  display: block;\n  max-width: 100vw;\n}\n\nd-article > d-math[block],\nd-article section > d-math[block]  {\n  display: block;\n  max-width: 100vw;\n}\n\n@media (max-width: 100vw) {\n  d-article > d-code,\n  d-article section > d-code,\n  d-article > d-math[block],\n  d-article section > d-math[block] {\n      overflow-x: scroll;\n      -ms-overflow-style: none;  // IE 10+\n      overflow: -moz-scrollbars-none;  // Firefox\n  }\n\n  d-article > d-code::-webkit-scrollbar,\n  d-article section > d-code::-webkit-scrollbar,\n  d-article > d-math[block]::-webkit-scrollbar,\n  d-article section > d-math[block]::-webkit-scrollbar {\n    display: none;  // Safari and Chrome\n  }\n}\n\nd-article .citation {\n  color: #668;\n  cursor: pointer;\n}\n\nd-include {\n  width: auto;\n  display: block;\n}\n\nd-figure {\n  contain: layout style;\n}\n\n/* KaTeX */\n\n.katex, .katex-prerendered {\n  contain: style;\n  display: inline-block;\n}\n\n/* Tables */\n\nd-article table {\n  border-collapse: collapse;\n  margin-bottom: 1.5rem;\n  border-bottom: 1px solid var(--global-dark-border-color);\n}\n\nd-article table th {\n  border-bottom: 1px solid var(--global-dark-border-color);\n}\n\nd-article table td {\n  border-bottom: 1px solid var(--global-dark-border-color);\n}\n\nd-article table tr:last-of-type td {\n  border-bottom: none;\n}\n\nd-article table th,\nd-article table td {\n  font-size: 15px;\n  padding: 2px 8px;\n}\n\nd-article table tbody :first-child td {\n  padding-top: 2px;\n}\n";
 
   var title = "/*\n * Copyright 2018 The Distill Template Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nd-title {\n  padding: 2rem 0 1.5rem;\n  contain: layout style;\n  overflow-x: hidden;\n}\n\n@media(min-width: 768px) {\n  d-title {\n    padding: 4rem 0 1.5rem;\n  }\n}\n\nd-title h1 {\n  grid-column: text;\n  font-size: 40px;\n  font-weight: 700;\n  line-height: 1.1em;\n  margin: 0 0 0.5rem;\n}\n\n@media(min-width: 768px) {\n  d-title h1 {\n    font-size: 50px;\n  }\n}\n\nd-title p {\n  font-weight: 300;\n  font-size: 1.2rem;\n  line-height: 1.55em;\n  grid-column: text;\n}\n\nd-title .status {\n  margin-top: 0px;\n  font-size: 12px;\n  color: #009688;\n  opacity: 0.8;\n  grid-column: kicker;\n}\n\nd-title .status span {\n  line-height: 1;\n  display: inline-block;\n  padding: 6px 0;\n  border-bottom: 1px solid #80cbc4;\n  font-size: 11px;\n  text-transform: uppercase;\n}\n";
 
@@ -1547,7 +1578,7 @@ d-appendix {
   line-height: 1.7em;
   margin-top: 60px;
   margin-bottom: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--global-footer-bg-color);
   color: rgba(0,0,0,0.5);
   padding-top: 60px;
   padding-bottom: 48px;
@@ -1683,7 +1714,7 @@ d-appendix > distill-appendix {
   (function(exports) {
 
       function BibtexParser() {
-          
+
           this.months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
           this.notKey = [',','{','}',' ','='];
           this.pos = 0;
@@ -1819,7 +1850,7 @@ d-appendix > distill-appendix {
                       return k.toLowerCase();
                   else
                       throw "Value expected:" + this.input.substring(start) + ' for key: ' + k;
-              
+
               }        };
 
           this.value = function() {
@@ -1842,7 +1873,7 @@ d-appendix > distill-appendix {
                       return this.input.substring(start, this.pos);
                   } else {
                       this.pos++;
-                      
+
                   }            }        };
 
           this.key_equals_value = function() {
@@ -1859,6 +1890,8 @@ d-appendix > distill-appendix {
           this.key_value_list = function() {
               var kv = this.key_equals_value();
               this.currentEntry['entryTags'] = {};
+              this.currentEntry['entryTags']['citationkey'] = this.currentEntry['citationKey'];
+              this.currentEntry['entryTags']['entrytype'] = this.currentEntry['entryType'];
               this.currentEntry['entryTags'][kv[0]] = kv[1];
               while (this.tryMatch(",")) {
                   this.match(",");
@@ -1917,7 +1950,7 @@ d-appendix > distill-appendix {
                   }
                   this.match("}");
               }        };
-      }    
+      }
       exports.toJSON = function(bibtex) {
           var b = new BibtexParser();
           b.setInput(bibtex);
@@ -1947,7 +1980,7 @@ d-appendix > distill-appendix {
               out += '}\n\n';
           }
           return out;
-          
+
       };
 
   })( exports);
@@ -1956,6 +1989,110 @@ d-appendix > distill-appendix {
   });
 
   // Copyright 2018 The Distill Template Authors
+
+  function normalizeTitleField(string, isBibtex = true) {
+    // Capture "title = { … }" including everything inside the first pair of braces
+    var titleRe;
+    if (isBibtex) {
+      titleRe = /(\btitle\s*=\s*)\{([\s\S]*?)\}\s*(?:,|$)/gi;
+    } else {
+      titleRe = string;
+    }
+  
+    return string.replace(titleRe, (match, assignment, content) => {
+      // match is `title = { … }`
+      // `assignment` is the "title = " part
+      // `content` is the raw text inside the outer {…}
+      let val = content;
+      // Peel away any inner {…} layers (that contain no further braces)
+      const layerRe = /\{([^{}]*)\}/g;
+      let prev;
+      do {
+        prev = val;
+        val = val.replace(layerRe, '$1');
+      } while (val !== prev);
+  
+      // Re‑wrap in a single outer pair of braces
+      if (isBibtex)
+        return assignment + '{' + val + '}';
+      else
+        return val;
+    });
+  }
+
+  /**
+   * Convert LaTeX‐style commands in a BibTeX author (or title, etc.) field into Unicode.
+   * 
+   * Reference: https://www.bibtex.org/SpecialSymbols/
+   *
+   * @param {string} bib — the raw string, e.g.
+   *     "{\\ae}mile Zola and {Garc{\\i}a, Mar{\\\'i}a}"
+   * @returns {string} the normalized Unicode, e.g.
+   *     "æmile Zola and García, María"
+   */
+  function renderAuthorUnicode(bib) {
+    // 1) Direct map for ligatures & special letters
+    const directMap = {
+      ae: 'æ', AE: 'Æ',
+      oe: 'œ', OE: 'Œ',
+      aa: 'å', AA: 'Å',
+      o:  'ø', O:  'Ø',
+      ss: 'ß',
+      l:  'ł', L:  'Ł',
+      dh: 'ð', DH: 'Ð',
+      th: 'þ', TH: 'Þ',
+      ij: 'ĳ', IJ: 'Ĳ'
+      // extend as needed...
+    };
+
+    // 2) Combining‐accent map
+    const accentMap = {
+      "'": "\u0301",   // acute
+      "`": "\u0300",   // grave
+      "^": "\u0302",   // circumflex
+      '"': "\u0308",   // umlaut/diaeresis
+      "~": "\u0303",   // tilde
+      "=": "\u0304",   // macron
+      ".": "\u0307",   // dot above
+      u: "\u0306",     // breve
+      v: "\u030C",     // caron (háček)
+      H: "\u030B",     // double acute
+      c: "\u0327",     // cedilla
+      d: "\u0323",     // dot below
+      b: "\u0331"      // macron below
+    };
+
+    let s = bib;
+
+    // A) Handle standalone commands like \ae, \ss, \o, etc.
+    s = s.replace(/\\(ae|AE|oe|OE|aa|AA|o|O|ss|l|L|dh|DH|th|TH|ij|IJ)/g,
+                (_, cmd) => directMap[cmd] || cmd);
+
+    // B) Handle accent commands applied to a single letter, e.g. \'e or \'{e}
+    s = s.replace(
+      /\\([\\'`^"~=\.\uvHcdb])\s*\{?([A-Za-z])\}?/g,
+      (_, cmd, letter) => letter + (accentMap[cmd] || "")
+    );
+
+    // C) Drop any remaining grouping braces
+    s = s.replace(/[{}]/g, "");
+
+    // D) Normalize so letter+combining → precomposed when possible
+    return s.normalize("NFC");
+  }
+
+  function renderPageUnicode(bib) {
+    // Convert "-" or "--" or "---" in page range to EN DASH ("–")
+    let s = bib;
+    s = s.replace(/(\d+)(?:---|--|-)(\d+)/g, (_, start, end) => {
+      if (start === end) {
+        return start;
+      } else {
+        return start + "–" + end;
+      }
+    });
+    return s;
+  }
 
   function normalizeTag(string) {
     return string
@@ -2131,7 +2268,7 @@ d-appendix > distill-appendix {
 }
 
 .citation {
-  color: hsla(206, 90%, 20%, 0.7);
+  color: var(--global-link-color);
 }
 
 .citation-number {
@@ -2139,13 +2276,18 @@ d-appendix > distill-appendix {
   white-space: nowrap;
   font-family: -apple-system, BlinkMacSystemFont, "Roboto", Helvetica, sans-serif;
   font-size: 75%;
-  color: hsla(206, 90%, 20%, 0.7);
+  color: var(--global-link-color);
   display: inline-block;
   line-height: 1.1em;
   text-align: center;
   position: relative;
   top: -2px;
   margin: 0 2px;
+}
+
+.citation-number::selection {
+  color: var(--global-link-color-visited);
+  background: rgba(187, 214, 251, 1.0);
 }
 
 figcaption .citation-number {
@@ -2163,7 +2305,7 @@ ul {
 
 ul li {
   padding: 15px 10px 15px 10px;
-  border-bottom: 1px solid rgba(0,0,0,0.1)
+  border-bottom: 1px solid var(--global-link-color)
 }
 
 ul li:last-of-type {
@@ -2277,6 +2419,18 @@ ul li:last-of-type {
         .map(html => `<li>${html}</li>`)
         .join("\n")}
     </ul>`;
+
+      // Add click event listener to the "Copy BibTeX" button in each entry
+      const buttons = this.hoverBox.querySelectorAll(".copy-to-clipboard-button");
+      buttons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+          button.innerHTML = "Copied!";
+          navigator.clipboard.writeText(decodeURI(button.getAttribute("data-copy-text")));
+          setTimeout(() => {
+            button.innerHTML = "Copy BibTeX";
+          }, 2000);
+        });
+      });
     }
   }
 
@@ -4171,7 +4325,7 @@ d-citation-list .references .title {
   	'constant': /\b(?:(?:NaN|Inf)(?:16|32|64)?)\b/
   };
 
-  var css = "/**\n * prism.js default theme for JavaScript, CSS and HTML\n * Based on dabblet (http://dabblet.com)\n * @author Lea Verou\n */\n\ncode[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tcolor: black;\n\tbackground: none;\n\ttext-shadow: 0 1px white;\n\tfont-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;\n\tfont-size: 1em;\n\ttext-align: left;\n\twhite-space: pre;\n\tword-spacing: normal;\n\tword-break: normal;\n\tword-wrap: normal;\n\tline-height: 1.5;\n\n\t-moz-tab-size: 4;\n\t-o-tab-size: 4;\n\ttab-size: 4;\n\n\t-webkit-hyphens: none;\n\t-moz-hyphens: none;\n\t-ms-hyphens: none;\n\thyphens: none;\n}\n\npre[class*=\"language-\"]::-moz-selection, pre[class*=\"language-\"] ::-moz-selection,\ncode[class*=\"language-\"]::-moz-selection, code[class*=\"language-\"] ::-moz-selection {\n\ttext-shadow: none;\n\tbackground: #b3d4fc;\n}\n\npre[class*=\"language-\"]::selection, pre[class*=\"language-\"] ::selection,\ncode[class*=\"language-\"]::selection, code[class*=\"language-\"] ::selection {\n\ttext-shadow: none;\n\tbackground: #b3d4fc;\n}\n\n@media print {\n\tcode[class*=\"language-\"],\n\tpre[class*=\"language-\"] {\n\t\ttext-shadow: none;\n\t}\n}\n\n/* Code blocks */\npre[class*=\"language-\"] {\n\tpadding: 1em;\n\tmargin: .5em 0;\n\toverflow: auto;\n}\n\n:not(pre) > code[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tbackground: #f5f2f0;\n}\n\n/* Inline code */\n:not(pre) > code[class*=\"language-\"] {\n\tpadding: .1em;\n\tborder-radius: .3em;\n\twhite-space: normal;\n}\n\n.token.comment,\n.token.prolog,\n.token.doctype,\n.token.cdata {\n\tcolor: slategray;\n}\n\n.token.punctuation {\n\tcolor: #999;\n}\n\n.token.namespace {\n\topacity: .7;\n}\n\n.token.property,\n.token.tag,\n.token.boolean,\n.token.number,\n.token.constant,\n.token.symbol,\n.token.deleted {\n\tcolor: #905;\n}\n\n.token.selector,\n.token.attr-name,\n.token.string,\n.token.char,\n.token.builtin,\n.token.inserted {\n\tcolor: #690;\n}\n\n.token.operator,\n.token.entity,\n.token.url,\n.language-css .token.string,\n.style .token.string {\n\tcolor: #9a6e3a;\n\tbackground: hsla(0, 0%, 100%, .5);\n}\n\n.token.atrule,\n.token.attr-value,\n.token.keyword {\n\tcolor: #07a;\n}\n\n.token.function,\n.token.class-name {\n\tcolor: #DD4A68;\n}\n\n.token.regex,\n.token.important,\n.token.variable {\n\tcolor: #e90;\n}\n\n.token.important,\n.token.bold {\n\tfont-weight: bold;\n}\n.token.italic {\n\tfont-style: italic;\n}\n\n.token.entity {\n\tcursor: help;\n}\n";
+  var css = "/**\n * prism.js default theme for JavaScript, CSS and HTML\n * Based on dabblet (http://dabblet.com)\n * @author Lea Verou\n */\n\ncode[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tcolor: var(--global-text-color);\n\tbackground: none;\n\ttext-shadow: 0 1px var(--global-bg-color);\n\tfont-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;\n\tfont-size: 1em;\n\ttext-align: left;\n\twhite-space: pre;\n\tword-spacing: normal;\n\tword-break: normal;\n\tword-wrap: normal;\n\tline-height: 1.5;\n\n\t-moz-tab-size: 4;\n\t-o-tab-size: 4;\n\ttab-size: 4;\n\n\t-webkit-hyphens: none;\n\t-moz-hyphens: none;\n\t-ms-hyphens: none;\n\thyphens: none;\n}\n\npre[class*=\"language-\"]::-moz-selection, pre[class*=\"language-\"] ::-moz-selection,\ncode[class*=\"language-\"]::-moz-selection, code[class*=\"language-\"] ::-moz-selection {\n\ttext-shadow: none;\n\tbackground: #b3d4fc;\n}\n\npre[class*=\"language-\"]::selection, pre[class*=\"language-\"] ::selection,\ncode[class*=\"language-\"]::selection, code[class*=\"language-\"] ::selection {\n\ttext-shadow: none;\n\tbackground: #b3d4fc;\n}\n\n@media print {\n\tcode[class*=\"language-\"],\n\tpre[class*=\"language-\"] {\n\t\ttext-shadow: none;\n\t}\n}\n\n/* Code blocks */\npre[class*=\"language-\"] {\n\tpadding: 1em;\n\tmargin: .5em 0;\n\toverflow: auto;\n}\n\n:not(pre) > code[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tbackground: var(--global-bg-color);\n}\n\n/* Inline code */\n:not(pre) > code[class*=\"language-\"] {\n\tpadding: .1em;\n\tborder-radius: .3em;\n\twhite-space: normal;\n}\n\n.token.comment,\n.token.prolog,\n.token.doctype,\n.token.cdata {\n\tcolor: slategray;\n}\n\n.token.punctuation {\n\tcolor: #999;\n}\n\n.token.namespace {\n\topacity: .7;\n}\n\n.token.property,\n.token.tag,\n.token.boolean,\n.token.number,\n.token.constant,\n.token.symbol,\n.token.deleted {\n\tcolor: #905;\n}\n\n.token.selector,\n.token.attr-name,\n.token.string,\n.token.char,\n.token.builtin,\n.token.inserted {\n\tcolor: #690;\n}\n\n.token.operator,\n.token.entity,\n.token.url,\n.language-css .token.string,\n.style .token.string {\n\tcolor: #9a6e3a;\n\tbackground: none;\n}\n\n.token.atrule,\n.token.attr-value,\n.token.keyword {\n\tcolor: #07a;\n}\n\n.token.function,\n.token.class-name {\n\tcolor: #DD4A68;\n}\n\n.token.regex,\n.token.important,\n.token.variable {\n\tcolor: #e90;\n}\n\n.token.important,\n.token.bold {\n\tfont-weight: bold;\n}\n.token.italic {\n\tfont-style: italic;\n}\n\n.token.entity {\n\tcursor: help;\n}\n";
 
   // Copyright 2018 The Distill Template Authors
 
@@ -4180,16 +4334,16 @@ d-citation-list .references .title {
 
 code {
   white-space: nowrap;
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--global-code-background-color);
   border-radius: 2px;
   padding: 4px 7px;
   font-size: 15px;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--global-text-color);
 }
 
 pre code {
   display: block;
-  border-left: 2px solid rgba(0, 0, 0, .1);
+  border-left: 4px solid var(--global-dark-border-color);
   padding: 0 0 0 36px;
 }
 
@@ -4263,7 +4417,7 @@ sup {
 }
 
 span {
-  color: hsla(206, 90%, 20%, 0.7);
+  color: var(--global-link-color);
   cursor: default;
 }
 
@@ -4344,7 +4498,7 @@ d-footnote-list > * {
 }
 
 d-footnote-list a.footnote-backlink {
-  color: rgba(0,0,0,0.3);
+  color: var(--global-bg-color);
   padding-left: 0.5em;
 }
 
@@ -4425,9 +4579,9 @@ d-footnote-list a.footnote-backlink {
   top: 0;
   left: 0;
   width: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background-color: rgba(250, 250, 250, 0.95);
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--global-dark-border-color);
+  background-color: var(--global-bg-color);
+  box-shadow: 0 0 7px var(--global-border-color);
   border-radius: 4px;
   box-sizing: border-box;
 
@@ -4875,7 +5029,7 @@ d-references {
   height: 100%;
   top: 0;
   left: 0;
-  background: white;
+  background: var(--global-thead-color);
 
   opacity: 1;
   visibility: visible;
@@ -8640,7 +8794,7 @@ p small {
     height: 3px;
     width: 100%;
     border-radius: 2px;
-    background-color: hsla(0, 0%, 0%, 0.2);
+    background-color: var(--global-border-color);
   }
 
   .track-fill {
@@ -8678,7 +8832,7 @@ p small {
     left: -6px;
     width: 13px;
     height: 13px;
-    background-color: hsla(0, 0%, 0%, 0.1);
+    background-color: var(--global-bg-color);
     border-radius: 50%;
     transition-property: transform;
     transition-duration: 0.18s;
@@ -8700,7 +8854,7 @@ p small {
   .ticks .tick {
     position: absolute;
     height: 100%;
-    border-left: 1px solid hsla(0, 0%, 0%, 0.2);
+    border-left: 1px solid var(--global-dark-border-color);
   }
 
 </style>
@@ -8942,8 +9096,8 @@ distill-header {
   box-sizing: border-box;
   z-index: 2;
   color: rgba(0, 0, 0, 0.8);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--global-border-color);
+  box-shadow: 0 1px 6px var(--global-bg-color);
 }
 distill-header .content {
   height: 70px;
@@ -8954,11 +9108,11 @@ distill-header a {
   height: 60px;
   line-height: 60px;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--global-bg-color);
   padding: 22px 0;
 }
 distill-header a:hover {
-  color: rgba(255, 255, 255, 1);
+  color: var(--global-bg-color);
 }
 distill-header svg {
   width: 24px;
@@ -8980,7 +9134,7 @@ distill-header svg {
 }
 distill-header svg path {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.8);
+  stroke: var(--global-bg-color);
   stroke-width: 3px;
 }
 distill-header .logo {
@@ -9029,13 +9183,13 @@ distill-header .nav a {
   distill-appendix .citation {
     font-size: 11px;
     line-height: 15px;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: 1px solid var(--global-dark-border-color);
     padding-left: 18px;
-    border: 1px solid rgba(0,0,0,0.1);
-    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--global-border-color);
+    background: var(--global-bg-color);
     padding: 10px 18px;
     border-radius: 3px;
-    color: rgba(150, 150, 150, 1);
+    color: var(--global-base-color);
     overflow: hidden;
     margin-top: -12px;
     white-space: pre-wrap;
@@ -9098,11 +9252,11 @@ distill-header .nav a {
 <style>
 
 :host {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--global-bg-color);
   font-weight: 300;
   padding: 2rem 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  background-color: hsl(180, 5%, 15%); /*hsl(200, 60%, 15%);*/
+  border-top: 1px solid var(--global-border-color);
+  background-color: var(--global-text-color); /*hsl(200, 60%, 15%);*/
   text-align: left;
   contain: content;
 }
@@ -9116,14 +9270,14 @@ distill-header .nav a {
 
 .footer-container .logo svg path {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.8);
+  stroke: var(--global-bg-color);;
   stroke-width: 3px;
 }
 
 .footer-container .logo {
   font-size: 17px;
   font-weight: 200;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--global-bg-color);
   text-decoration: none;
   margin-right: 6px;
 }
@@ -9138,7 +9292,7 @@ distill-header .nav a {
 }
 
 .footer-container .nav a {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--global-bg-color);
   margin-right: 6px;
   text-decoration: none;
 }

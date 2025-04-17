@@ -32,6 +32,7 @@ $navicon-width              : 28px;
 $navicon-height             : 4px;
 $sidebar-link-max-width     : 250px;
 $sidebar-screen-min-width   : 1024px;
+$svg-filter                 : invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(80%) contrast(120%);
 
 /* Dark theme for the site */
 html[data-theme="dark"] {
@@ -40,7 +41,7 @@ html[data-theme="dark"] {
     --global-footer-bg-color            : #{$background};
     --global-border-color               : #{$light-gray};
     --global-dark-border-color          : #{$background-light};
-    --global-code-background-color      : #fafafa;
+    --global-code-background-color      : #fdf3d0;
     --global-code-text-color            : #{$darker-gray};
     --global-fig-caption-color          : #{$dark-gray};
     --global-link-color                 : #{$link};
@@ -51,4 +52,5 @@ html[data-theme="dark"] {
     --global-text-color                 : #{$text};
     --global-text-color-light           : #{$light-gray};
     --global-thead-color                : #{$background-lighter};
+    --global-svg-filter                 : #{$svg-filter};
 }

@@ -20,7 +20,7 @@ Journal Papers
 
 Conference Papers
 ======
-1. [EMNLP 2024] Towards Robust Speech Representation Learning for Thousands of Languages<d-cite key="Towards-Chen2024"/> <span style="color:red;">(Best Paper Award)</span>
+1. [EMNLP 2024] Towards Robust Speech Representation Learning for Thousands of Languages<d-cite key="Towards-Chen2024"/> <span class="highlight-red">(Best Paper Award)</span>
 2. [ISCSLP 2024] Insights from Hyperparameter Scaling of Online Speech Separation<d-cite key="Insights-Zhou2024"/>
 3. [Interspeech 2024] URGENT Challenge: Universality, Robustness, and Generalizability For Speech Enhancement<d-cite key="URGENT-Zhang2024"/>
 4. [Interspeech 2024] Beyond Performance Plateaus: A Comprehensive Study on Scalability in Speech Enhancement<d-cite key="Beyond-Zhang2024"/>
@@ -40,7 +40,7 @@ Conference Papers
 18. [Interspeech 2022] Separating Long-form Speech with Group-wise Permutation Invariant Training<d-cite key="Separating-Zhang2022"/>
 19. [Interspeech 2022] ESPnet-SE++: Speech Enhancement for Robust Speech Recognition, Translation, and Understanding<d-cite key="ESPnet_SE-Lu2022"/>
 20. [ICASSP 2022] The SJTU System for Multimodal Information Based Speech Processing Challenge 2021<d-cite key="SJTU-Wang2022"/>
-21. [ICASSP 2022] Towards Low-Distortion Multi-Channel Speech Enhancement: The ESPnet-SE Submission to the L3DAS22 Challenge<d-cite key="Towards-Lu2022"/> <span style="color:red;">(First Place in the 3D Speech Enhancement Task of L3DAS22 Challenge)</span>
+21. [ICASSP 2022] Towards Low-Distortion Multi-Channel Speech Enhancement: The ESPnet-SE Submission to the L3DAS22 Challenge<d-cite key="Towards-Lu2022"/> <span class="highlight-red">(First Place in the 3D Speech Enhancement Task of L3DAS22 Challenge)</span>
 22. [ICASSP 2022] Text Adaptive Detection for Customizable Keyword Spotting<d-cite key="Text-Xi2022"/>
 23. [ICASSP 2022] Exploring Effective Data Utilization for Low-Resource Speech Recognition<d-cite key="Exploring-Zhou2022"/>
 24. [WASPAA 2021] Closing the Gap Between Time-domain Multi-channel Speech Enhancement on Real and Simulation Conditions<d-cite key="Closing-Zhang2021"/>
@@ -53,7 +53,7 @@ Conference Papers
 31. [Interspeech 2020] Learning Contextual Language Embeddings for Monaural Multi-Talker Speech Recognition<d-cite key="Learning-Zhang2020"/>
 32. [ICASSP 2020] End-To-End Multi-Speaker Speech Recognition With Transformer<d-cite key="End_To_End-Chang2020"/>
 33. [ASRU 2019] End-to-End Overlapped Speech Detection and Speaker Counting with Raw Waveform<d-cite key="End_to_End-Zhang2019"/>
-34. [ASRU 2019] MIMO-Speech: End-to-End Multi-Channel Multi-Speaker Speech Recognition<d-cite key="MIMO_Speech-Chang2019"/> <span style="color:red;">(Best Paper Award)</span>
+34. [ASRU 2019] MIMO-Speech: End-to-End Multi-Channel Multi-Speaker Speech Recognition<d-cite key="MIMO_Speech-Chang2019"/> <span class="highlight-red">(Best Paper Award)</span>
 35. [ASRU 2019] A Comparative Study on Transformer vs RNN in Speech Applications<d-cite key="Comparative-Karita2019"/>
 36. [Interspeech 2019] Knowledge Distillation for End-to-End Monaural Multitalker ASR System<d-cite key="Knowledge-Zhang2019"/>
 37. [Interspeech 2019] Robust DOA Estimation Based on Convolutional Neural Network and Time-Frequency Masking<d-cite key="Robust-Zhang2019"/>

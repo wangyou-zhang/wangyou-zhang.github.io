@@ -12,6 +12,26 @@ redirect_from:
 
 {% include base_path %}
 
+
+<!-- <d-code block language="python">
+import librosa
+
+wav, fs = librosa.load('xxx.wav', sr=None)
+</d-code>
+
+<blockquote>
+This is a blockquote example.
+</blockquote>
+
+<d-math>
+\alpha + \int_{0}^{+\infty} t \exp(-t) dt * \frac{1}{a} \sum_{i=1}^{n} \frac{1}{\sqrt{2\pi}} e^{-\frac{(x - \mu)^2}{2\sigma^2}} dx
+</d-math>
+
+<d-byline>
+This is a byline example.
+</d-byline> -->
+
+
 教育经历
 ======
 * **[2018-2024]** 在上海交通大学（SJTU）攻读博士学位，专业：计算机科学与技术
