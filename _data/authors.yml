@@ -20,12 +20,12 @@ Name2 Name2:
 en:
   avatar           : "profile.png"
   name             : "Wangyou Zhang"
-  pronouns         : # example: "she/her"  
+  pronouns         : # example: "she/her"
   bio              : "Assistant Professor"
   location         : "School of Artificial Intelligence,<br/>No. 1954 Huashan Road,<br/>Xuhui District, Shanghai, China"
   employer         : "Shanghai Jiao Tong University"
   uri              : # URL
-  email            : "zwyemrys@gmail.com" 
+  email            : "wyz-97@sjtu.edu.cn"
   # Academic websites
   googlescholar    : "https://scholar.google.com.hk/citations?user=LQ_ApskAAAAJ"
   # Repositories and software development
@@ -37,14 +37,14 @@ en:
 zh-CN:
   avatar           : "profile.png"
   name             : "张王优"
-  pronouns         : # example: "she/her"  
+  pronouns         : # example: "she/her"
   bio              : "助理教授"
   location         : "人工智能学院<br/>上海市徐汇区华山路 1954 号"
   employer         : "上海交通大学"
   uri              : # URL
-  email            : "zwyemrys@gmail.com" 
+  email            : "wyz-97@sjtu.edu.cn"
   # Academic websites
-  googlescholar    : "https://scholar.google.com.hk/citations?user=LQ_ApskAAAAJ"
+  googlescholar    : "https://scholar.google.com.hk/citations?user=LQ_ApskAAAAJ&hl=zh-CN"
   # Repositories and software development
   github           : "Emrys365"
   # Social media
