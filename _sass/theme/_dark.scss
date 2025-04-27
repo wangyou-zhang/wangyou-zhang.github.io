@@ -53,4 +53,7 @@ html[data-theme="dark"] {
     --global-text-color-light           : #{$light-gray};
     --global-thead-color                : #{$background-lighter};
     --global-svg-filter                 : #{$svg-filter};
+    --global-paper-year-color           : #a61f67;
+    --global-paper-pub-color            : #156f9f;
+    --global-paper-badge-close          : #9c1919;
 }
