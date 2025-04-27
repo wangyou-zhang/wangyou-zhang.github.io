@@ -26,6 +26,7 @@ $navicon-height             : 4px;
 $sidebar-link-max-width     : 250px;
 $sidebar-screen-min-width   : 1024px;
 $svg-filter                 : none;
+$paper-svg-filter           : none;
 
 /* Default light theme for the site */
 :root {
@@ -46,6 +47,7 @@ $svg-filter                 : none;
     --global-text-color-light           : #{$light-gray};
     --global-thead-color                : #{$lighter-gray};
     --global-svg-filter                 : #{$svg-filter};
+    --global-paper-svg-filter           : #{$paper-svg-filter};
     --global-paper-year-color           : #d32b85;
     --global-paper-pub-color            : #25b2fd;
     --global-paper-badge-close          : #c90c0c;

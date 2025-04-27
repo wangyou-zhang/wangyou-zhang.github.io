@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
   $(".paper-tag-badge.paper-year").on("click", function () {
-    // add paper-year-hide class to all parent elements whose ".paper-tag-badge.paper-year" child has a different value
     var year = $(this).text();
     $(".paper-tag-badge.paper-year").each(function () {
       if ($(this).text() !== year) {
@@ -11,7 +10,6 @@ $(document).ready(function () {
       }
     });
     var badgeContainer;
-    // Add ".paper-tag-badge.paper-year" element with a close button on its upper-right corner to the ".page__title" element if it doesn't exist
     if ($(".page__title").find(".paper-tag-badge-container").length > 0) {
       badgeContainer = $(".page__title").find(".paper-tag-badge-container");
     } else {
@@ -25,8 +23,7 @@ $(document).ready(function () {
     badgeContainer.append(badgeItem);
     var yearButton = $(this).clone();
     badgeItem.append(yearButton);
-    // Add close button to the year button
-    var closeButton = $("<button class='close-button'></button>");
+    var closeButton = $("<img class='close-button'></img>");
     closeButton.on("click", function (e) {
       e.stopPropagation(); // Prevent the click event from bubbling up to the year button
       $(".paper-tag-badge.paper-year").each(function () {
@@ -38,7 +35,6 @@ $(document).ready(function () {
   });
 
   $(".paper-tag-badge.paper-pub").on("click", function () {
-    // hide all parent elements whose ".paper-tag-badge.paper-pub" child has a different value
     var pub = $(this).text();
     $(".paper-tag-badge.paper-pub").each(function () {
       if ($(this).text() !== pub) {
@@ -61,8 +57,7 @@ $(document).ready(function () {
     badgeContainer.append(badgeItem);
     var pubButton = $(this).clone();
     badgeItem.append(pubButton);
-    // Add close button to the pub button
-    var closeButton = $("<button class='close-button'></button>");
+    var closeButton = $("<img class='close-button'></img>");
     closeButton.on("click", function (e) {
       e.stopPropagation(); // Prevent the click event from bubbling up to the pub button
       $(".paper-tag-badge.paper-pub").each(function () {

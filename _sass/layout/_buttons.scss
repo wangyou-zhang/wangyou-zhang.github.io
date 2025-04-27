@@ -167,41 +167,57 @@
 }
 
 .close-button {
+  content:url('/images/cancel.svg');
   position: absolute;
   cursor: pointer;
+  border: 0px solid #fff;
   border-radius: 50%;
-  border: 2px solid #fff;
   box-shadow: 1px 1px 1px #888888;
   width: 18px;
   height: 18px;
-  background-color: var(--global-paper-badge-close);
-  color: #fff;
+  background-color: white;
+  filter: var(--global-paper-svg-filter);
   top: 0;
   right: 0;
   transform: translate(50%, 0%);
 }
-.close-button::before {
-  content: " ";
-  position: absolute;
-  display: block;
-  background-color: #fff;
-  width: 2px;
-  left: 6px;
-  top: 2px;
-  bottom: 2px;
-  transform: rotate(45deg);
-}
-.close-button::after {
-  content: " ";
-  position: absolute;
-  display: block;
-  background-color: #fff;
-  height: 2px;
-  top: 6px;
-  left: 2px;
-  right: 2px;
-  transform: rotate(45deg);
-}
+
+// .close-button {
+//   position: absolute;
+//   cursor: pointer;
+//   border-radius: 50%;
+//   border: 2px solid #fff;
+//   box-shadow: 1px 1px 1px #888888;
+//   width: 18px;
+//   height: 18px;
+//   background-color: var(--global-paper-badge-close);
+//   color: #fff;
+//   top: 0;
+//   right: 0;
+//   transform: translate(50%, 0%);
+// }
+// .close-button::before {
+//   content: " ";
+//   position: absolute;
+//   display: block;
+//   background-color: #fff;
+//   width: 2px;
+//   left: 6px;
+//   top: 2px;
+//   bottom: 2px;
+//   transform: rotate(45deg);
+// }
+// .close-button::after {
+//   content: " ";
+//   position: absolute;
+//   display: block;
+//   background-color: #fff;
+//   height: 2px;
+//   top: 6px;
+//   left: 2px;
+//   right: 2px;
+//   transform: rotate(45deg);
+// }
 
 .paper-tag-badge {
   display: inline;
