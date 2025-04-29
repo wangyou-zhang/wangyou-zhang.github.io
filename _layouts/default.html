@@ -6,9 +6,12 @@ layout: compress
 
 <!doctype html>
 <meta charset="utf-8">
-<script src="/assets/js/distillpub/template.v2.js"></script>
 <html lang="{{ site.locale | slice: 0,2 }}" class="no-js"{% if site.site_theme == "dark" %} data-theme="dark"{% endif %}{% if site.locale == "en" %} data-locale="en"{% else %} data-locale="zh-CN" {% endif %}>
   <head>
+    <script src="/assets/js/distillpub/template.v2.js"></script>
+    <link rel="preload" href="/images/cancel.svg" as="image" />
+    <link rel="preload" href="/images/english-to-chinese.svg" as="image" />
+    <link rel="preload" href="/images/chinese-to-english.svg" as="image" />
     {% include head.html %}
     {% include head/custom.html %}
   </head>
