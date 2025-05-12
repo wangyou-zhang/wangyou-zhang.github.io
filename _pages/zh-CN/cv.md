@@ -67,13 +67,16 @@ This is a byline example.
 
 > 请访问 [我的 Google Scholar 主页]({{site.author.googlescholar}}) 查看详细论文列表
 
-截至 2025 年 4 月 8 日，我共发表 41 篇高质量期刊和会议论文（其中 17 篇为第一作者论文），包括：
+截至 2025 年 5 月 12 日，我共发表 44 篇高质量期刊和会议论文（其中 17 篇为第一作者论文），包括：
 * TASLP: 2
 * SPM: 1
+* OJSP: 1
 * Applied Sciences: 1
+* npj-Acoustics: 1
 * ICASSP: 10
 * Interspeech: 11
 * EMNLP: 1
+* NAACL-HLT: 1
 * ASRU: 8
 * SLT: 2
 * WASPAA: 2

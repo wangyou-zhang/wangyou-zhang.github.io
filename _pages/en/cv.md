@@ -47,13 +47,16 @@ Publications
 
 > You can find the full publication list in [my Google Scholar profile]({{site.author.googlescholar}}).
 
-Till 2025-04-08, I have published 41 high-quality journal and conference papers (17 first-authored), including:
+Till 2025-05-12, I have published 44 high-quality journal and conference papers (17 first-authored), including:
 * TASLP: 2
 * SPM: 1
+* OJSP: 1
 * Applied Sciences: 1
+* npj-Acoustics: 1
 * ICASSP: 10
 * Interspeech: 11
 * EMNLP: 1
+* NAACL-HLT: 1
 * ASRU: 8
 * SLT: 2
 * WASPAA: 2
