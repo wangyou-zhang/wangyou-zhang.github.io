@@ -886,7 +886,7 @@ ${math}
   }
 
   function venue_string(ent) {
-    var cite = ent.journal || ent.booktitle || "";
+    var cite = renderPublication(ent.journal) || renderPublication(ent.booktitle) || "";
     if ("volume" in ent) {
       var issue = ent.issue || ent.number;
       issue = issue != undefined ? "(" + issue + ")" : "";
@@ -2078,6 +2078,18 @@ d-appendix > distill-appendix {
     s = s.replace(/[{}]/g, "");
 
     // D) Normalize so letter+combining → precomposed when possible
+    return s.normalize("NFC");
+  }
+
+  function renderPublication(bib) {
+    // Convert the booktitle/journal field to a human‐readable string
+    // by removing the braces and replacing any LaTeX commands
+    // with their Unicode equivalents.
+    // Note: this is a bit of a hack, but it works for now.
+
+    let s = bib;
+    // Convert \& to &
+    s = s.replace(/\\&/g, '&');
     return s.normalize("NFC");
   }
 

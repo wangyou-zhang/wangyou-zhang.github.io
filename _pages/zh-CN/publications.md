@@ -13,12 +13,13 @@ bibliography: publications.bib
 
 期刊论文
 ======
-1. {% include paper-badge.html year="2025" pub="npj-Acoustics" %} Contextual Understanding With Contextual Embeddings for Multi-Talker Speech Separation and Recognition in a Cocktail Party<d-cite key="Contextual-Qian2025"/>
-2. {% include paper-badge.html year="2025" pub="OJSP" %} SpoofCeleb: Speech Deepfake Detection and SASV in the Wild<d-cite key="SpoofCeleb-Jung2025"/>
-3. {% include paper-badge.html year="2024" pub="SPM" %} Module-Based End-to-End Distant Speech Processing: A Case Study of Far-Field Automatic Speech Recognition<d-cite key="Module_Based-Chang2024"/>
-4. {% include paper-badge.html year="2023" pub="Applied Sciences" %} Two-Stage Single-Channel Speech Enhancement with Multi-Frame Filtering<d-cite key="Two_Stage-Lin2023"/>
-5. {% include paper-badge.html year="2022" pub="TASLP" %} End-to-End Dereverberation, Beamforming, and Speech Recognition in A Cocktail Party<d-cite key="End_to_End-Zhang2022"/>
-6. {% include paper-badge.html year="2020" pub="TASLP" %} Improving End-to-End Single-Channel Multi-Talker Speech Recognition<d-cite key="Improving-Zhang2020"/>
+1. {% include paper-badge.html year="2025" pub="CSL" %} An End-to-End Integration of Speech Separation and Recognition With Self-Supervised Learning Representation<d-cite key="End_to_End-Masuyama2025"/>
+2. {% include paper-badge.html year="2025" pub="npj-Acoustics" %} Contextual Understanding With Contextual Embeddings for Multi-Talker Speech Separation and Recognition in a Cocktail Party<d-cite key="Contextual-Qian2025"/>
+3. {% include paper-badge.html year="2025" pub="OJSP" %} SpoofCeleb: Speech Deepfake Detection and SASV in the Wild<d-cite key="SpoofCeleb-Jung2025"/>
+4. {% include paper-badge.html year="2024" pub="SPM" %} Module-Based End-to-End Distant Speech Processing: A Case Study of Far-Field Automatic Speech Recognition<d-cite key="Module_Based-Chang2024"/>
+5. {% include paper-badge.html year="2023" pub="Applied Sciences" %} Two-Stage Single-Channel Speech Enhancement with Multi-Frame Filtering<d-cite key="Two_Stage-Lin2023"/>
+6. {% include paper-badge.html year="2022" pub="TASLP" %} End-to-End Dereverberation, Beamforming, and Speech Recognition in A Cocktail Party<d-cite key="End_to_End-Zhang2022"/>
+7. {% include paper-badge.html year="2020" pub="TASLP" %} Improving End-to-End Single-Channel Multi-Talker Speech Recognition<d-cite key="Improving-Zhang2020"/>
 
 会议论文
 ======
