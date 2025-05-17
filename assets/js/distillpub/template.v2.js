@@ -2087,6 +2087,7 @@ d-appendix > distill-appendix {
     // with their Unicode equivalents.
     // Note: this is a bit of a hack, but it works for now.
 
+    if (bib === undefined) return undefined;
     let s = bib;
     // Convert \& to &
     s = s.replace(/\\&/g, '&');
