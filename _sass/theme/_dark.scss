@@ -44,6 +44,14 @@ html[data-theme="dark"] {
     --global-dark-border-color          : #{$background-light};
     --global-code-background-color      : #fdf3d0;
     --global-code-text-color            : #{$darker-gray};
+    --global-code-comment-color         : #74985d;
+    --global-code-keyword-color         : #7cb2ff;
+    --global-code-number-color          : #e1d563;
+    --global-code-boolean-color         : #9485e1;
+    --global-code-token-color           : #c28c4b;
+    --global-code-classname-color       : #de6a81;
+    --global-code-builtin-color         : #df7bd9;
+    --global-code-variable-color        : #e90;
     --global-fig-caption-color          : #{$dark-gray};
     --global-link-color                 : #{$link};
     --global-link-color-hover           : #{$link-dark};
