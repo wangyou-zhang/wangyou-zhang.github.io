@@ -4388,7 +4388,6 @@ ${css}
 
       if (this.hasAttribute('block')) {
         // normalize the tab indents
-        console.log("Before: ", content);
         content = content.replace(/\n/, '');
         const tabs = content.match(/\s*/);
         content = content.replace(new RegExp('\n' + tabs, 'g'), '\n');
@@ -4400,7 +4399,6 @@ ${css}
           preTag.appendChild(codeTag);
           this.shadowRoot.appendChild(preTag);
         }
-        console.log("After: ", content);
 
       }
 

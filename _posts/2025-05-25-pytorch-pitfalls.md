@@ -18,7 +18,7 @@ This blog post will continuously update with common pitfalls encountered when us
 ## Assign value by reference vs. by value
 In PyTorch, when you directly assign a tensor to another variable, it does not create a copy of the tensor by default. Instead, it creates a **reference** to the original tensor. This means that if you modify the new variable, the original tensor will also be modified.
 
-<d-code block language="python">
+<d-code pre block language="python">
 import torch
 
 a = torch.tensor([1, 2, 3])
@@ -38,7 +38,7 @@ print(a)  # -> tensor([0, 2, 3])
 
 A more elusive example is when you swapping two parts of a tensor:
 
-<d-code block language="python">
+<d-code pre block language="python">
 import torch
 
 a = torch.tensor([1, 2, 3, 4])
@@ -55,7 +55,7 @@ print(a)  # -> tensor([3, 4, 1, 2]), now it works as expected
 </d-code>
 
 Another common pitfall is when you use the `clone()` method. The `clone()` method creates a copy of the tensor, but it does not detach it from the computation graph. This means that if you perform operations on the cloned tensor, gradients will still be tracked.
-<d-code block language="python">
+<d-code pre block language="python">
 import torch
 
 a = torch.tensor([1., 2., 3.], requires_grad=True)
@@ -73,6 +73,6 @@ print(a.grad)  # -> tensor([0., 1., 1.])
 
 To avoid this pitfall, you can use the `detach()` method before cloning to create a copy that is not part of the computation graph:
 
-<d-code block language="python">
+<d-code pre block language="python">
 c = a.detach().clone()
 </d-code>
