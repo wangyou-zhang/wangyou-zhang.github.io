@@ -1,0 +1,75 @@
+/* Header/Footer stuff */
+.my-header {
+  display: inline-block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 70px;
+  width: 100%;
+  text-align: left;
+  color: white;
+  font-size: 40px;
+}
+
+.my-header img {
+  float: left;
+  width: 5%;
+  margin-left: 1%;
+  margin-right: 1%;
+  margin-top: 1.25%;
+}
+
+.my-header span {
+  display: table-cell;
+  height: 70px;
+  width: 92%;
+  padding-left: 1%;
+  padding-right: 1%;
+  vertical-align: middle;
+  color: white;
+}
+
+.my-watermark {
+  background-image: url(/images/remark.js/logo_sjtu.svg);
+  display: block;
+  position: absolute;
+  right: -16.2%;
+  bottom: -10%;
+  height: 60%;
+  width: 45%;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-clip: border-box;
+  transform: rotate(315deg);
+}
+
+.unselectable {
+  user-drag: none; 
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+}
+
+.my-footer {
+  display: inline-block;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  height: 26px;
+  font-size: 14px;
+  width: 100%;
+  color: white;
+}
+
+.my-footer span {
+  display: table-cell;
+  position: absolute;
+  left: 0px;
+  height: 22px;
+  padding-top: 4px;
+  vertical-align: middle;
+  color: white;
+}
