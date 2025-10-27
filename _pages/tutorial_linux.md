@@ -264,7 +264,7 @@ count: false
 # 1. 取消命令/退出命令行
   > + `ctrl + c`：取消当前在执行的命令
   > + `ctrl + d`：退出当前命令行（仅在当前无前台命令在执行时生效）
-  > + 输入 `quit` 命令：退出当前命令行
+  > + 输入 `exit` 命令：退出当前命令行
 
 ---
 
@@ -553,18 +553,18 @@ wget "http://example.com/file.zip" -O "/path/to/save/file.zip"
 wget -c "http://example.com/file.zip" -O "/path/to/save/file.zip"
 
 # （一）上传本地文件到远程服务器
-scp username@remoteHost:"/path/to/remote_file" "/local/path"
-scp -r username@remoteHost:"/path/to/remote_dir" "/local/path/"
-# rsync 支持断点续传
-rsync username@remoteHost:"/path/to/remote_file" "/local/path"
-rsync -a username@remoteHost:"/path/to/remote_dir" "/local/path/"
-
-# （二）下载远程服务器文件到本地
 scp "/local/file" username@remoteHost:"/path/to/remote_path"
 scp -r "/local/dir" username@remoteHost:"/path/to/remote_path/"
 # rsync 支持断点续传
 rsync "/local/file" username@remoteHost:"/path/to/remote_path"
 rsync -a "/local/dir/" username@remoteHost:"/path/to/remote_path/"
+
+# （二）下载远程服务器文件到本地
+scp username@remoteHost:"/path/to/remote_file" "/local/path"
+scp -r username@remoteHost:"/path/to/remote_dir" "/local/path/"
+# rsync 支持断点续传
+rsync username@remoteHost:"/path/to/remote_file" "/local/path"
+rsync -a username@remoteHost:"/path/to/remote_dir" "/local/path/"
 ```
 
 ---
