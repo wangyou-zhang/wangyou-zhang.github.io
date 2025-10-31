@@ -159,7 +159,14 @@ Host alias_name
 ssh alias_name
 ```
 
-> 以上配置成功后，VSCode 等支持 SSH 远程登录的软件也能够免密登录
+.orange[以上配置成功后，VSCode 等支持 SSH 远程登录的软件也能够免密登录]
+
+(5) 集群内部，不同节点之间的免密登录
+
+```bash
+# 登录到远程服务器集群，然后输入以下命令
+cat ~/.ssh/public_key_file.pub >> ~/.ssh/authorized_keys
+```
 
 ---
 
@@ -1075,6 +1082,7 @@ name: slurm
       + 翻译版：https://doc.slurm.cn
       + https://hpcde.github.io/cluster-docs/docs/users/slurm/quickstart
       + https://docs.hpc.sjtu.edu.cn/job/
++ 集群（Cluster）：一组相互独立的、通过高速网络互联的计算机，它们作为一个整体被管理，就像一个单一的服务器。
 ]]
 
 .right-column-55[
@@ -1158,6 +1166,26 @@ name: slurm
   <text class="small" x="450" y="940">Minimal Slurm Architecture: client → controller → accounting → partitions(nodes) → shared storage</text>
 </svg>
 ]
+
+---
+
+# SLURM 与文件系统
+
++ 共享存储
+  + 网络文件系统（Network File System, [NFS](https://nfs.sourceforge.net/)）
+     + 允许多台计算机通过**网络**共享文件和目录（受限于网络带宽）
+     + 适用于小型集群或对性能要求不高的场景
+  + 集群文件系统：同时挂载在多个服务器上实现文件共享
+      + [Lustre](https://www.lustre.org)：[开源](https://github.com/lustre/lustre-release)的分布式并行文件系统
+          + 优点：可扩展的高性能
+          + 缺点：部署和维护复杂，数据可靠性过度依赖硬件
+      + [BeeGFS](https://doc.beegfs.io/latest/overview/overview.html)：高性能的分布式文件系统（[代码公开](https://github.com/ThinkParQ/beegfs)）
+          + 优点：开放硬件架构下的高性能，相对 Lustre/GPFS 更加灵活易用和更高扩展性
+          + 缺点：系统复杂度较高，性能之外的高级存储功能缺失比较多
+      + [GPFS (IBM Spectrum® Scale)](https://www.ibm.com/products/spectrum-scale)：企业级分布式文件系统
+          + 优点：高性能、高可靠性，适用于大规模数据存储和处理
+          + 缺点：商业软件，成本较高
+
 
 ---
 
@@ -1341,6 +1369,8 @@ name: vscode
 
 # VSCode 使用技巧
 
++ 复制整行
+    + 光标点选某一行，按下 `Ctrl + C` 或 `Cmd + C`
 + 快速跳转到指定行
     + 按下 `Ctrl + G`，输入行号并回车
 + 快速注释/取消注释代码
@@ -1349,6 +1379,8 @@ name: vscode
     + 按下 `Ctrl + P`（macOS 中为 `Cmd + P`），输入文件名关键字，选择对应文件并回车打开
 + 批量删除行末的空白符
     + 按下 `Ctrl + Shift + P`（macOS 中为 `Cmd + Shift + P`），输入 `trim`，找到 `Trim Trailing Whitespace` 并回车
++ 快速将多行文本转换为单行（用空格分隔）
+    + 选中多行文本，按下 `Ctrl + J`（macOS 中也可以用 `Option + J`）
 
 ---
 
