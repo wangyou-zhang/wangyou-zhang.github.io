@@ -1464,14 +1464,16 @@ name: student-benefits
 
 # GitHub 学生开发包
 
+![:callout info](
 + 网址：https://education.github.com/pack
   + 用学校邮箱（sjtu.edu.cn）注册/绑定账号，通过学生证认证（每年更新认证？）
-  + 可以免费获得哪些福利？（2025 年 10 月）
+  + 可以免费获得哪些福利？（2025 年 11 月）
 	  + .red[GitHub Pro] 用户权益（可无限创建私有仓库）
 	  + .red[GitHub Copilot] 和相应的 VSCode 插件
 	  + Microsoft Azure 云服务器 + $100 credits
 	  + Namecheap 的免费域名和 SSL 证书（1 年）、Name.com 的免费域名
 	  + 等等
+)
 
 ---
 
