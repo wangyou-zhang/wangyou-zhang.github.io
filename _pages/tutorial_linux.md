@@ -42,22 +42,21 @@ layout: true
 </div>
 
 ---
+class: middle
 name: toc
 
-#
-
-.v-loose[
-1. [SSH 登录](#ssh-login)
-2. [Linux 基本操作](#linux-basics)
-3. [Zsh / Bash](#zsh-bash)
-4. [调试机使用方式](#debug-machine-usage)
-5. [Python / PyTorch](#python-pytorch)
-6. [YAML](#yaml)
-7. [Git](#git)
-8. [SLURM](#slurm)
-9. [VSCode](#vscode)
-10. [学生福利](#student-benefits)
-]
+![:toc](
+  1. 【SSH 登录】（#ssh-login）
+  2. 【Linux 基本操作】（#linux-basics）
+  3. 【Zsh / Bash】（#zsh-bash）
+  4. 【调试机使用方式】（#debug-machine-usage）
+  5. 【Python / PyTorch】（#python-pytorch）
+  6. 【YAML】（#yaml）
+  7. 【Git】（#git）
+  8. 【SLURM】（#slurm）
+  9. 【VSCode】（#vscode）
+  10. 【学生福利】（#student-benefits）
+)
 
 ---
 layout: true
@@ -93,7 +92,7 @@ name: ssh-login
     + Windows：`C:\Users\your_username\.ssh\config`
 + 第三方终端模拟器
     + Windows：[MobaXterm](https://mobaxterm.mobatek.net)、[Xshell](https://www.netsarang.com/en/xshell/)、[WezTerm](https://wezterm.org/index.html) 等
-    + macOS：[iTerm2](https://iterm2.com/) 等
+    + macOS：[iTerm2](https://iterm2.com/)、[Kitty](https://sw.kovidgoyal.net/kitty/quickstart/)、[Ghostty](https://ghostty.org) 等
 
 --
 count: false
