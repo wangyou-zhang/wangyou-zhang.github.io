@@ -24,7 +24,8 @@ class: center
 
 .huge[张王优]
 
-.cute.orange[2025 年 10 月 27 日]
+.cute.orange[2025 年 10 月 27 日]<br/>
+.small[.cute.gray[更新于 2025 年 11 月 13 日]]
 
 
 ---
@@ -46,16 +47,16 @@ class: middle
 name: toc
 
 ![:toc](
-  1. 【SSH 登录】（#ssh-login）
-  2. 【Linux 基本操作】（#linux-basics）
-  3. 【Zsh / Bash】（#zsh-bash）
-  4. 【调试机使用方式】（#debug-machine-usage）
-  5. 【Python / PyTorch】（#python-pytorch）
-  6. 【YAML】（#yaml）
-  7. 【Git】（#git）
-  8. 【SLURM】（#slurm）
-  9. 【VSCode】（#vscode）
-  10. 【学生福利】（#student-benefits）
+  1. [SSH 登录]&#lpar;#ssh-login&#rpar;
+  2. [Linux 基本操作]&#lpar;#linux-basics&#rpar;
+  3. [Zsh / Bash]&#lpar;#zsh-bash&#rpar;
+  4. [调试机使用方式]&#lpar;#debug-machine-usage&#rpar;
+  5. [Python / PyTorch]&#lpar;#python-pytorch&#rpar;
+  6. [YAML]&#lpar;#yaml&#rpar;
+  7. [Git]&#lpar;#git&#rpar;
+  8. [SLURM]&#lpar;#slurm&#rpar;
+  9. [VSCode]&#lpar;#vscode&#rpar;
+  10. [学生福利]&#lpar;#student-benefits&#rpar;
 )
 
 ---
@@ -216,7 +217,7 @@ ssh -R 6008:remote_host_name_or_ip:6666 username@remoteHost
 ssh -J jump_user@jump_host:jump_port target_user@target_host -p target_port
 
 # 方式二：使用 ProxyCommand 选项
-ssh -o ProxyCommand="ssh -W %h:%p jump_user@jump_host -p jump_port" \
+ssh -o ProxyCommand="ssh -W %h:%p jump_user@jump_host -p jump_port" `\`
     target_user@target_host -p target_port
 
 # 方式三：在 SSH 配置文件 ~/.ssh/config 中配置跳板机（jump_server）
@@ -418,8 +419,8 @@ find "data" -type f -size +100M
 find "/path/to/search" -name ".DS_Store" -type f -delete
 
 # 查找所有名为 __pycache__ 或 __MACOSX 的目录，并删除
-find "/path/to/search" -name "__pycache__" -type d -exec rm -rf {} \;
-find "/path/to/search" -name "__MACOSX" -type d -exec rm -rf {} \;
+find "/path/to/search" -name "__pycache__" -type d -exec rm -rf {} `\;`
+find "/path/to/search" -name "__MACOSX" -type d -exec rm -rf {} `\;`
 ```
 
 ---
@@ -776,8 +777,8 @@ name: python-pytorch
 
 ```bash
 # 下载 Miniconda 安装脚本（以 Linux 64-bit 为例，约 150 MB）
-wget -c --tries=3 --no-check-certificate \
-    "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" \
+wget -c --tries=3 --no-check-certificate `\`
+    "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" `\`
     -O ~/miniconda3.sh
 # 安装 Miniconda（安装路径可自定义）
 bash ~/miniconda3.sh -b -p "$HOME/miniconda3"
@@ -840,6 +841,93 @@ EOF
 
 ---
 
+# IPython 和 JupyterLab
+
+![:callout info, IPython：增强版的 Python REPL（交互式命令行）](
++ 安装：`pip install ipython` 或 `uv install ipython`
++ **适用场景**：快速调试代码片段、测试函数等
++ 使用方式：在命令行输入 `ipython` 即可进入 IPython 交互式命令行
+  + 支持语法高亮、Tab 补全、魔法命令等功能
+)
+
+推荐配置 1
+```bash
+ipython profile create
+# 在 IPython 中自动加载代码的热更新
+cat >> ~/.ipython/profile_default/ipython_config.py << 'EOF'
+*c.InteractiveShellApp.exec_lines = []
+*c.InteractiveShellApp.exec_lines.append('%load_ext autoreload')
+*c.InteractiveShellApp.exec_lines.append('%autoreload 2')
+*c.InteractiveShellApp.exec_lines.append(r'print("\n\033[1m\033[38;5;9mWarning:\033[0m\033[1m disable autoreload in \033[4m~/.ipython/profile_default/ipython_config.py\033[0m\033[1m if you want to improve performance.\033[0m")')
+EOF
+```
+
+---
+
+# IPython 和 JupyterLab
+
+推荐配置 2
+
+```bash
+# 参考 https://gist.github.com/fratajczak/64e32421a43d3b8194d0409ce300518a
+# 将 ctrl+w / ctrl+左右箭头的默认行为修改为以整个单词为删除/移动单位
+cat > ~/.ipython/profile_default/startup/shortcuts.py << 'EOF'
+*from prompt_toolkit.key_binding.bindings import named_commands as nc
+*from prompt_toolkit.keys import Keys
+*from prompt_toolkit.enums import DEFAULT_BUFFER
+*from prompt_toolkit.filters import has_focus, has_selection, emacs_insert_mode
+*
+*ipython = get_ipython()
+*
+*def backward_word_space(event):
+*    buf = event.current_buffer
+*    pos = buf.document.find_previous_word_beginning(count=event.arg, WORD=True)
+*
+*    if pos:
+*        buf.cursor_position += pos
+*
+*
+*def forward_word_space(event):
+*    buf = event.current_buffer
+*    pos = buf.document.find_next_word_ending(count=event.arg, WORD=True)
+*
+*    if pos:
+*        buf.cursor_position += pos
+*
+*
+*if getattr(ipython, 'pt_app', None):
+*    registry = ipython.pt_app.key_bindings
+*
+*    # cont+W now only kills the previous word instead of until the previous whitespace
+*    registry.add_binding(Keys.ControlW,
+*                         filter=(has_focus(DEFAULT_BUFFER)
+*                                 & ~has_selection
+*                                 & emacs_insert_mode))(nc.backward_kill_word)
+*    registry.add_binding(Keys.ShiftLeft,
+*                         filter=(has_focus(DEFAULT_BUFFER)
+*                                 & emacs_insert_mode))(backward_word_space)
+*    registry.add_binding(Keys.ShiftRight,
+*                         filter=(has_focus(DEFAULT_BUFFER)
+*                                 & emacs_insert_mode))(forward_word_space)
+EOF
+```
+
+---
+
+# IPython 和 JupyterLab
+
+![:callout info, JupyterLab：基于浏览器的交互式编程环境](
++ 安装：`pip install jupyterlab` 或 `uv install jupyterlab`
++ 支持 Markdown 文本块 和 Python 代码块两种类型的单元格，可逐个单元格执行代码
++ **适用场景**：数据可视化、分析和代码调试
++ 使用方式：
+    1. 在命令行输入 `jupyter lab` 即可启动 Jupyter
+      + 通过浏览器访问 `http://localhost:8888`（或命令行输出的其他端口号）即可使用 JupyterLab
+    2. 安装 VSCode 的 Jupyter Notebook 插件，即可在 VSCode 中直接运行 Jupyter Notebook 文件（`.ipynb`）
+)
+
+---
+
 # PyTorch 安装
 
 + 官方安装指南：https://pytorch.org/get-started/locally/
@@ -860,8 +948,8 @@ EOF
 
 # PyTorch 使用技巧与踩坑
 
-+ 注意模型处理过程中，device 是否始终保持一致（`cpu` vs. `cuda:0` vs. `cuda:1`）
 + 使用 `torch.no_grad()` 包裹不需要梯度计算的代码块，节省显存
++ 注意模型处理过程中，device 是否始终保持一致（`cpu` vs. `cuda:0` vs. `cuda:1`）
 + 注意 DataLoader 中的 `num_workers` 参数设置，避免使用过多子进程，导致内存不足（`oom_kill`）
 + 按引用传递对象时，注意避免意外修改原始对象
 
@@ -876,18 +964,40 @@ c = a.clone()  # 使用 clone 创建 a 的副本，不会和 a 互相影响
 b[0] = 0       # 修改 b 中元素的值也会影响 a -> tensor([0, 2, 3])
 
 a = torch.tensor([1, 2, 3, 4])
-a[:2], a[-2:] = a[-2:], a[:2]  # 看上去交换了两者元素的值
+a[:2], b[-2:] = b[-2:], a[:2]  # 看上去交换了两者元素的值
 print(a)  # -> tensor([3, 4, 3, 4]), 实际上不等于 tensor([3, 4, 1, 2])
 
-a[:2], a[-2:] = a[-2:].clone(), a[:2].clone()
+a[:2], b[-2:] = b[-2:].clone(), a[:2].clone()
 print(a)  # -> tensor([3, 4, 1, 2])，正确交换了两者元素的值
 ```
-
 
 ---
 
 # PyTorch 使用技巧与踩坑
 
+![:callout warn, 常见错误示例](
++ 忘记对模型的输入信号/特征做.blue[归一化（normalization）]
++ 在推理/评估阶段没有使用 `model.eval&#lpar;&#rpar;`
++ 局部微调时忘记.blue[冻结]预训练模型的参数
++ 训练类似 Transformer 架构的模型时，忘记使用.blue[学习率预热（warm-up）]
++ 处理不同采样率的音频数据时，忘记.blue[重采样（resample）]到统一采样率
++ 加载原始长度不同的 batch 数据时，没有把其中的音频.blue[截断/补零]到一样长
+  + 处理这类 batch 时未采用时间.blue[掩码（mask）]，导致模型学到错误的信息
++ 在类别极度不平衡的数据集上，只汇报准确率（Accuracy）指标，而不关注其他指标（如 F1-score、Precision、Recall 等）
++ 遇到训练 loss 出现 NaN 时，反而把学习率调得更大
++ 错把 `feature.to&#lpar;device&#rpar;` 当作 .blue[in-place 操作]
+)
+
+---
+
+# PyTorch 使用技巧与踩坑
+
++ 调试 checklist
+    + 检查实验用的数据（包括 dump 之后的特征）是否正常？【不要想当然，在做实验之前最好抽样验证，以免浪费时间】
+    + 上一次 Debug 时修改的代码有没有还原回去？
+    + 如果 CTC 模块的 loss 为 inf 或者梯度为 nan，请检查训练数据中是否有 CTC 输入特征长度小于标签序列长度的样本
+    + 如果存在 PyTorch 模型不更新的问题，请检查代码中是否有 `.detach()` 或者 `with torch.no_grad()` 使用不当的情况
+    + 用预训练模型提取特征时，是否固定住该部分参数，以及设置 `model.eval()`？
 + 调试案例
     + 中文博客：https://emrys365.github.io/post/debug-gu-shi-01/
     + 英文博客：[the bug that taught me more about PyTorch than years of using it](https://elanapearl.github.io/blog/2025/the-bug-that-taught-me-pytorch/)
@@ -1054,6 +1164,11 @@ git checkout path/to/file
     + https://githubfast.com
     + https://gitclone.com
 
+![:callout warn, 注意](
+  + 镜像站可能存在安全隐患，建议谨慎选择不知名的镜像站
+  + 镜像站的更新频率可能滞后于 GitHub 官方仓库
+)
+
 ---
 layout: true
 <div class="my-header" style="background-color: #173D6E;">
@@ -1218,14 +1333,14 @@ name: slurm
   + 提交 GPU 任务的示例 .midsize[（申请 1 个节点，每个节点 2 张显卡，内存 30G，--qos qlong 表示任务时间最多为 3 天，--ntasks-per-node 指定并行任务个数）]：
 
 ```bash
-sbatch -J job_name --qos qlong -p 4090,a10 --gres=gpu:2 -N 1 \
-    --ntasks-per-node 2 --mem=30G --cpus-per-task 8 \
+sbatch -J job_name --qos qlong -p 4090,a10 --gres=gpu:2 -N 1 `\`
+    --ntasks-per-node 2 --mem=30G --cpus-per-task 8 `\`
 *   ./run.sh --stage 6 --stop_stage 6 --enh_config conf/train.yaml
 ```
   + 提交 CPU 任务的示例 .midsize[（申请 1 个节点，内存 20G，-t 02:00:00 指定任务时间最多为 2 小时，--cpus-per-task 指定每个任务使用的 CPU 数）]：
 
 ```bash
-srun -t 02:00:00 --qos qnormal -p cpu -N 1 --cpus-per-task=4 --mem=20G \
+sbatch -t 02:00:00 --qos qnormal -p cpu -N 1 --cpus-per-task=4 --mem=20G `\`
 *   ./run.sh --stage 1 --stop_stage 4 --nj 4
 ```
 + `srun`：交互式运行作业（阻塞式）
@@ -1245,20 +1360,20 @@ srun -t 02:00:00 --qos qnormal -p cpu -N 1 --cpus-per-task=4 --mem=20G \
 .tiny[
 ```bash
 # 排除特定节点（--exclude=xxx,yyy 或 -x xxx）
-sbatch -J job_name --qos qlong -p 4090,a10 `--exclude=gpu-a10-04,gpu-4090-02` \
-    -N 1 --ntasks-per-node 1 --mem=16G --cpus-per-task 4 \
+sbatch -J job_name --qos qlong -p 4090,a10 `--exclude=gpu-a10-04,gpu-4090-02` `\`
+    -N 1 --ntasks-per-node 1 --mem=16G --cpus-per-task 4 `\`
     ./run.sh --stage 1 --stop_stage 4 --nj 4
 
 # 指定使用特定节点（--nodelist=xxx 或 -w xxx）
-sbatch -J job_name --qos qlong -p 4090,a10 `--nodelist=gpu-4090-01` \
-    -N 1 --ntasks-per-node 1 --mem=16G --cpus-per-task 4 \
+sbatch -J job_name --qos qlong -p 4090,a10 `--nodelist=gpu-4090-01` `\`
+    -N 1 --ntasks-per-node 1 --mem=16G --cpus-per-task 4 `\`
     ./run.sh --stage 1 --stop_stage 4 --nj 4
 
 # 等待特定作业结束后再启动（--dependency=afterany:jobID 或 -d afterany:jobID）
 #   afterany 表示无论该作业成功或失败，afterok 表示仅在该作业成功结束后才启动
-sbatch -J job_name --qos qlong -p 4090,a10 \
-    `--dependency=afterany:6287` \
-    -N 1 --ntasks-per-node 1 --mem=16G --cpus-per-task 4 \
+sbatch -J job_name --qos qlong -p 4090,a10 `\`
+    `--dependency=afterany:6287` `\`
+    -N 1 --ntasks-per-node 1 --mem=16G --cpus-per-task 4 `\`
     ./run.sh --stage 1 --stop_stage 4 --nj 4
 ```
 ]
@@ -1276,12 +1391,12 @@ sbatch -J job_name --qos qlong -p 4090,a10 \
 
 ```bash
 # 提交 GPU 任务
-srun --pty --qos qshort -p 4090,a10 --gres=gpu:1 -N 1 \
-    --ntasks-per-node 1 --mem=16G --cpus-per-task 4 \
+srun --pty --qos qshort -p 4090,a10 --gres=gpu:1 -N 1 `\`
+    --ntasks-per-node 1 --mem=16G --cpus-per-task 4 `\`
 *   bash -l
 
 # 提交 CPU 任务
-srun --pty -t 02:00:00 --qos qnormal -p cpu -N 1 --cpus-per-task=4 --mem=8G \
+srun --pty -t 02:00:00 --qos qnormal -p cpu -N 1 --cpus-per-task=4 --mem=8G `\`
 *   bash -l
 ```
 
@@ -1302,7 +1417,7 @@ srun --pty -t 02:00:00 --qos qnormal -p cpu -N 1 --cpus-per-task=4 --mem=8G \
 
 ```bash
 # 分配 GPU 资源
-salloc --qos qlong -p 4090,a10 --gres=gpu:2 -N 1 \
+salloc --qos qlong -p 4090,a10 --gres=gpu:2 -N 1 `\`
     --ntasks-per-node 2 --mem=30G --cpus-per-task 8 --qos qlong
 # 任务启动后，使用 srun 命令运行程序
 *srun ./run.sh
