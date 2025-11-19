@@ -25,7 +25,7 @@ class: center
 .huge[张王优]
 
 .cute.orange[2025 年 10 月 27 日]<br/>
-.small[.cute.gray[更新于 2025 年 11 月 13 日]]
+.small[.cute.gray[更新于 2025 年 11 月 19 日]]
 
 
 ---
@@ -134,9 +134,10 @@ ssh-copy-id -f -i ~/.ssh/key.pub username@remoteHost
 # 若没有安装 ssh-copy-id 命令，也可以手动登录到远程服务器，并在服务器上手动创建
 #   ~/.ssh/ 目录，将公钥文件的文本内容添加到 ~/.ssh/authorized_keys 文件末尾
 ssh username@remoteHost
-mkdir -p ~/.ssh/
-echo "your_public_key_content" >> ~/.ssh/authorized_keys
+mkdir -p ~/.ssh/;       echo "your_public_key_content" >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
+# 如果跳板机与集群服务器的 $HOME 目录在不同路径（如 /home/username 和
+#     /share_home/username），还需要分别在每个 $HOME 目录下执行上述操作
 ```
 
 ---
@@ -150,7 +151,7 @@ Host alias_name
     HostName xxx.xxx.xxx.xxx  # 远程服务器地址（域名或 IP）
     User username            # 登录用户名
     Port 1234                 # 远程服务器端口号（默认 22）
-    IdentityFile ~/.ssh/key   # 私钥文件路径
+    IdentityFile ~/.ssh/key   # 私钥文件路径（Windows 系统则为 C:\User\username\.ssh\key）
 ```
 
 (4) 使用别名登录远程服务器
@@ -1041,6 +1042,33 @@ export WANDB_MODE=offline
 ```
 > 使其将实验数据保存到本地，稍后可手动上传
 
+---
+
+# 实验结果可视化
+
++ SwanLab
+    + 远程可视化实验结果，国产服务，需注册账号并登录：https://swanlab.cn
+    + 不仅支持[联网使用](https://github.com/SwanHubX/SwanLab#-快速开始)，也支持开源、免费、[自托管的版本](https://github.com/SwanHubX/SwanLab#-自托管)
+    + 通过登录 swanlab 网站，查看对应项目的实验结果
+```bash
+# 登录 wandb 账号
+swanlab login  # 出现提示时，输入您的 API Key，按下回车，完成登陆
+```
+
+```python
+# 使用方法
+import swanlab
+
+# 初始化一个新的 swanlab 实验
+swanlab.init(
+    project="my-first-ml",
+    config={'learning-rate': 0.003},
+)
+
+# 记录指标
+for i in range(10):
+    swanlab.log({"loss": i, "acc": i})
+```
 
 ---
 layout: true
