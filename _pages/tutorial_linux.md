@@ -630,7 +630,7 @@ rsync -a username@remoteHost:"/path/to/remote_dir" "/local/path/"
 
     ```bash
     # 用 conda 安装 p7zip 命令
-    conda install -c conda-forge p7zip
+    conda install -c conda-forge::p7zip
     # 用 apt-get 安装 p7zip 命令（Ubuntu 系统，仅适用于有 sudo 权限的用户）
     sudo apt-get update;    sudo apt-get install p7zip-full
 
