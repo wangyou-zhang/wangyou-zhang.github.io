@@ -577,7 +577,78 @@ rsync -a username@remoteHost:"/path/to/remote_dir" "/local/path/"
 
 ---
 
-# 14. 查找历史命令
+# 14. 解压缩文件
+
++ `tar`：解压缩 tar、tar.gz、tar.bz2 等格式的压缩包
+    + 集群上一般都预装该命令
+    ```bash
+    # 解压缩 .tar 格式的压缩包
+    #   -x: 解压缩
+    #   -v: 显示解压缩过程
+    #   -f: 指定压缩包文件名
+    #   -C: 指定解压缩到的目标路径（可选）
+    tar -xvf "/path/to/file.tar" -C "/path/to/destination_dir"
+    # 解压缩 .tar.gz 或 .tgz 格式的压缩包
+    #   -z: 使用 gzip 解压缩
+    tar -xzvf "/path/to/file.tar.gz"
+    # 解压缩 .tar.bz2 格式的压缩包
+    #   -j: 使用 bzip2 解压缩
+    tar -xjvf "/path/to/file.tar.bz2"
+    ```
++ `unzip`：解压缩 zip 格式的压缩包
++ `7z`：解压缩 7z、rar 格式的压缩包
+
+---
+
+# 14. 解压缩文件
+
++ `tar`：解压缩 tar、tar.gz、tar.bz2 等格式的压缩包
++ `unzip`：解压缩 zip 格式的压缩包
+    + 如果集群上没有安装该命令，可通过 conda 手动安装
+
+    ```bash
+    # 安装 unzip 命令
+    conda install conda-forge::unzip
+    
+    # 解压缩 .zip 格式的压缩包
+    #   -d: 指定解压缩到的目标路径（可选）
+    unzip "/path/to/file.zip" -d "/path/to/destination_dir"
+
+    # 查看 zip 压缩包内容
+    unzip -l "/path/to/file.zip"
+    ```
+
++ `7z`：解压缩 7z、rar 格式的压缩包
+
+---
+
+# 14. 解压缩文件
+
++ `tar`：解压缩 tar、tar.gz、tar.bz2 等格式的压缩包
++ `unzip`：解压缩 zip 格式的压缩包
++ `7z`：解压缩 7z、rar 格式的压缩包
+
+    ```bash
+    # 用 conda 安装 p7zip 命令
+    conda install -c conda-forge p7zip
+    # 用 apt-get 安装 p7zip 命令（Ubuntu 系统，仅适用于有 sudo 权限的用户）
+    sudo apt-get update;    sudo apt-get install p7zip-full
+
+    # 解压缩 .7z 格式的压缩包
+    #   x: 解压缩
+    #   -o: 指定解压缩到的目标路径（可选）
+    #       注意，-o 后面不能有空格
+    7z x "/path/to/file.7z" -o"/path/to/destination_dir"
+    # 解压缩 .rar 格式的压缩包
+    7z x "/path/to/file.rar" -o"/path/to/destination_dir"
+
+    # 查看 7z 或 rar 压缩包内容
+    7z l "/path/to/file.rar"
+    ```
+
+---
+
+# 15. 查找历史命令
 
 + `history`：查看历史命令
 + `ctrl + r` + 输入关键词 + 重复按下 `ctrl + r`：反向搜索历史命令
@@ -586,7 +657,7 @@ rsync -a username@remoteHost:"/path/to/remote_dir" "/local/path/"
 
 ---
 
-# 15. 查看进程的资源占用以及进程管理
+# 16. 查看进程的资源占用以及进程管理
 
 + `top`：动态查看系统资源占用情况
 + `htop`：增强版的 top（可能需要手动安装）
@@ -609,7 +680,7 @@ killall process_name  # 终止指定名称的所有进程
 
 ---
 
-# 16. 在后台执行（长时）任务
+# 17. 在后台执行（长时）任务
 
 + `tmux`：终端复用工具，支持在后台运行任务
 
@@ -634,7 +705,7 @@ tmux ls
 
 ---
 
-# 16. 在后台执行（长时）任务
+# 18. 在后台执行（长时）任务
 
 + `tmux`：终端复用工具，支持在后台运行任务
 
@@ -649,7 +720,7 @@ set -g set-clipboard on  # 允许与系统剪贴板交互
 
 ---
 
-# 17. 查看已占用的硬盘空间
+# 19. 查看已占用的硬盘空间
 
 + `df`：查看磁盘分区的使用情况
 + `du`：查看指定路径的磁盘使用情况
@@ -814,7 +885,7 @@ conda activate env_name
 # 使用 pip 安装包，并指定镜像源
 python -m pip install xxx -i "https://mirrors.aliyun.com/pypi/simple/"
 # 使用 uv 安装包，并指定镜像源
-uv install xxx --index-url "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+uv add xxx --index "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
 ```
 
 ---
@@ -845,7 +916,7 @@ EOF
 # IPython 和 JupyterLab
 
 ![:callout info, IPython：增强版的 Python REPL（交互式命令行）](
-+ 安装：`pip install ipython` 或 `uv install ipython`
++ 安装：`pip install ipython` 或 `uv add --dev ipython`
 + **适用场景**：快速调试代码片段、测试函数等
 + 使用方式：在命令行输入 `ipython` 即可进入 IPython 交互式命令行
   + 支持语法高亮、Tab 补全、魔法命令等功能
@@ -918,13 +989,28 @@ EOF
 # IPython 和 JupyterLab
 
 ![:callout info, JupyterLab：基于浏览器的交互式编程环境](
-+ 安装：`pip install jupyterlab` 或 `uv install jupyterlab`
++ 安装：`pip install jupyterlab` 或 `uv add jupyterlab`
 + 支持 Markdown 文本块 和 Python 代码块两种类型的单元格，可逐个单元格执行代码
 + **适用场景**：数据可视化、分析和代码调试
 + 使用方式：
     1. 在命令行输入 `jupyter lab` 即可启动 Jupyter
       + 通过浏览器访问 `http://localhost:8888`（或命令行输出的其他端口号）即可使用 JupyterLab
     2. 安装 VSCode 的 Jupyter Notebook 插件，即可在 VSCode 中直接运行 Jupyter Notebook 文件（`.ipynb`）
+)
+
+---
+
+# IPython 和 JupyterLab
+
+![:callout info, marimo：基于浏览器的交互式编程环境](
++ 安装：`pip install marimo` 或 `uv add marimo`
++ 支持 Markdown 文本块 和 Python 代码块两种类型的单元格，可逐个单元格执行代码
++ 支持更高级的交互功能，如 ① 生成可交互 UI 元素，如与图表进行交互，② 更新某个单元格中的全局变量后，自动运行其他引用该变量的单元格等
++ **适用场景**：数据可视化、分析和代码调试
++ 使用方式：
+    1. 在命令行输入 `marimo edit` 即可启动 notebook 服务
+      + 通过浏览器访问 `http://localhost:2718?access_token=xxxxx`（或命令行输出的其他端口号）即可使用
+    2. 安装 VSCode 的 marimo 插件，即可在 VSCode 中直接运行 marimo notebook 文件（`.py`）
 )
 
 ---
@@ -1178,6 +1264,26 @@ git remote -v
 ```bash
 git checkout path/to/file
 ```
+
+---
+
+# GitHub 仓库
+
++ GitHub 是目前最大的.gray[<del>同性交友</del>]开源代码托管平台，拥有海量的开源项目资源
+    + 示例仓库：https://github.com/Emrys365/torch_stft
+
+.left-column-44[![:scale 90%](https://raw.githubusercontent.com/Mottie/GitHub-userscripts/master/images/github-download-zip.gif)]
+
+
+.right-column-55[
+![:callout warn, 注意](
+.v-loose[
++ 通过 GitHub 仓库页面的 Download 按钮下载 ZIP 压缩包，会导致仓库中的&#lspar;软链接&#rspar;&#lpar;https://gnu-linux.readthedocs.io/zh/latest/Chapter03/00_link.html&#rpar;和 git 版本控制失效
+    + ZIP 压缩格式不支持软链接的存储
++ 建议使用 `git clone` 命令克隆仓库
+]
+)
+]
 
 ---
 
