@@ -25,7 +25,7 @@ class: center
 .huge[张王优]
 
 .cute.orange[2025 年 10 月 27 日]<br/>
-.small[.cute.gray[更新于 2025 年 11 月 19 日]]
+.small[.cute.gray[更新于 2025 年 11 月 22 日]]
 
 
 ---
@@ -1010,7 +1010,7 @@ EOF
 + 使用方式：
     1. 在命令行输入 `marimo edit` 即可启动 notebook 服务
       + 通过浏览器访问 `http://localhost:2718?access_token=xxxxx`（或命令行输出的其他端口号）即可使用
-    2. 安装 VSCode 的 marimo 插件，即可在 VSCode 中直接运行 marimo notebook 文件（`.py`）
+    2. 使用基于 WebAssembly 的在线版本：https://marimo.app/
 )
 
 ---
