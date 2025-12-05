@@ -25,7 +25,7 @@ class: center
 .huge[张王优]
 
 .cute.orange[2025 年 10 月 27 日]<br/>
-.small[.cute.gray[更新于 2025 年 11 月 22 日]]
+.small[.cute.gray[更新于 2025 年 12 月 5 日]]
 
 
 ---
@@ -534,17 +534,17 @@ vim "/path/to/file"
 
 .small[
 > 1. 打开 vim 后，默认进入【读模式】
-> 2. 按下小写 `a`（append）或者 `i`（insert）或者 `s`（substitute）进入「编辑模式」
-> 3. 在「编辑模式」中，按下 `Esc` 键，可退出「编辑模式」，回到【读模式】
-> 4. 在【读模式】中，按下大写 `G` 可跳到文件末尾，按下小写 `gg` 可跳到文件开头
-> 5. 在【读模式】中，按下数字，再按下大写 `G` 可跳到数字指定的行号处
-> 6. 在【读模式】中，按下小写 `dd` 可删除当前行
-> 7. 在【读模式】中，按下小写 `u` 可撤销上一步的改动，按下 `ctrl+r` 可重做撤销的改动
-> 8. 在【读模式】中，依次按下英文符号 `/xyz` 并回车，会搜索字符串 `xyz` 出现的所有位置；<br/>
->     在此「搜索模式」下，按小写 `n` 跳转到下个匹配位置，按大写  `N` 跳转到前一个匹配位置
-> 9. 在【读模式】中，依次按下 `:s#xxx#yyy#g` 并回车，可将出现的所有字符串 `xxx`
+> 2. 按下小写 <kbd>a</kbd>（append）或者 <kbd>i</kbd>（insert）或者 <kbd>s</kbd>（substitute）进入「编辑模式」
+> 3. 在「编辑模式」中，按下 <kbd>Esc</kbd> 键，可退出「编辑模式」，回到【读模式】
+> 4. 在【读模式】中，按下大写 <kbd>G</kbd> 可跳到文件末尾，按下小写 <kbd>gg</kbd> 可跳到文件开头
+> 5. 在【读模式】中，按下数字，再按下大写 <kbd>G</kbd> 可跳到数字指定的行号处
+> 6. 在【读模式】中，按下小写 <kbd>dd</kbd> 可删除当前行
+> 7. 在【读模式】中，按下小写 <kbd>u</kbd> 可撤销上一步的改动，按下 <kbd>ctrl+r</kbd> 可重做撤销的改动
+> 8. 在【读模式】中，依次按下英文符号 <kbd>/xyz</kbd> 并回车，会搜索字符串 `xyz` 出现的所有位置；<br/>
+>     在此「搜索模式」下，按小写 <kbd>n</kbd> 跳转到下个匹配位置，按大写  <kbd>N</kbd> 跳转到前一个匹配位置
+> 9. 在【读模式】中，依次按下 <kbd>:s#xxx#yyy#g</kbd> 并回车，可将出现的所有字符串 `xxx`
 >	 替换为 `yyy`
-> 10. 在【读模式】中，依次按下英文符号 `:q`（quit）或者 `:wq`（write and quit）或者 `:q!`（force quitting），然后回车，以退出 vim 界面；也可以通过按下大写 `ZZ`，保存并退出
+> 10. 在【读模式】中，依次按下英文符号 <kbd>:q</kbd>（quit）或者 <kbd>:wq</kbd>（write and quit）或者 <kbd>:q!</kbd>（force quitting），然后回车，以退出 vim 界面；也可以通过按下大写 <kbd>ZZ</kbd>，保存并退出
 ]
 
 ---
@@ -651,7 +651,7 @@ rsync -a username@remoteHost:"/path/to/remote_dir" "/local/path/"
 # 15. 查找历史命令
 
 + `history`：查看历史命令
-+ `ctrl + r` + 输入关键词 + 重复按下 `ctrl + r`：反向搜索历史命令
++ <kbd>ctrl + r</kbd> + 输入关键词 + 重复按下 <kbd>ctrl + r</kbd>：反向搜索历史命令
 
 <iframe src="https://sandbox.bio/playgrounds/terminal" width="700px" height="400px" style="border: none; transform: scale(1.0); transform-origin: 0 0;"></iframe>
 
@@ -683,6 +683,8 @@ killall process_name  # 终止指定名称的所有进程
 # 17. 在后台执行（长时）任务
 
 + `tmux`：终端复用工具，支持在后台运行任务
+    + 默认组合键：
+        + 按下 <kbd>ctrl + b</kbd> 并松开：进入 tmux 命令模式，直接按下后续按键以执行对应命令
 
 ```bash
 # 1. 创建并进入一个新的 tmux 会话（可用 -s 指定会话的唯一名称）
@@ -1603,13 +1605,13 @@ name: vscode
 # VSCode 使用技巧
 
 + 批量编辑多处文字
-    1. 按住 `Alt` 键（macOS 中为 `Option` 键），点选多处文字，创建多个光标
-    2. 按住 `Shift + Alt` 键（macOS 中为 `Shift + Option` 键），从当前光标位置开始，向上（或向下）拖动鼠标，创建多行光标
-    3. 按住 `Shift + Alt` 键（macOS 中为 `Shift + Option` 键），点选另一行的位置，在当前行与所选行之间创建多行光标
+    1. 按住 <kbd>Alt</kbd> 键（macOS 中为 <kbd>Option</kbd> 键），点选多处文字，创建多个光标
+    2. 按住 <kbd>Shift + Alt</kbd> 键（macOS 中为 <kbd>Shift + Option</kbd> 键），从当前光标位置开始，向上（或向下）拖动鼠标，创建多行光标
+    3. 按住 <kbd>Shift + Alt</kbd> 键（macOS 中为 <kbd>Shift + Option</kbd> 键），点选另一行的位置，在当前行与所选行之间创建多行光标
 + 快速移动行
-    + 按住 `Alt` 键（macOS 中为 `Option` 键），再按下方向键 `↑` 或 `↓`：上下移动当前行（或当前选中的多行）
+    + 按住 <kbd>Alt</kbd> 键（macOS 中为 <kbd>Option</kbd> 键），再按下方向键 <kbd>↑</kbd> 或 <kbd>↓</kbd>：上下移动当前行（或当前选中的多行）
 + 将剪贴板内容与当前文件进行比较
-    + 按下 `Ctrl + Shift + P`（macOS 中为 `Cmd + Shift + P`），输入 `compare`，找到 `Compare Active File with Clipboard` 并回车
+    + 按下 <kbd>Ctrl + Shift + P</kbd>（macOS 中为 <kbd>Cmd + Shift + P</kbd>），输入 `compare`，找到 `Compare Active File with Clipboard` 并回车
 + 分屏显示多个文件
     + 将外部文件或当前打开的「文件选项卡」，拖拽到编辑区的左侧（或右侧、上侧、下侧），松开后即可分屏显示
 
@@ -1618,27 +1620,27 @@ name: vscode
 # VSCode 使用技巧
 
 + 复制整行
-    + 光标点选某一行，按下 `Ctrl + C` 或 `Cmd + C`
+    + 光标点选某一行，按下 <kbd>Ctrl + C</kbd> 或 <kbd>Cmd + C</kbd>
 + 快速跳转到指定行
-    + 按下 `Ctrl + G`，输入行号并回车
+    + 按下 <kbd>Ctrl + G</kbd>，输入行号并回车
 + 快速注释/取消注释代码
-    + `Ctrl + /`（macOS 中为 `Cmd + /`）：支持单行（光标所在行）和选中多行
+    + <kbd>Ctrl + /</kbd>（macOS 为 <kbd>Cmd + /</kbd>）：支持单行 (光标所在行) 和选中多行
 + 快速打开最近打开过的文件
-    + 按下 `Ctrl + P`（macOS 中为 `Cmd + P`），输入文件名关键字，选择对应文件并回车打开
+    + 按下 <kbd>Ctrl + P</kbd>（macOS 为 <kbd>Cmd + P</kbd>），输入文件名关键字，选择对应文件并回车打开
 + 批量删除行末的空白符
-    + 按下 `Ctrl + Shift + P`（macOS 中为 `Cmd + Shift + P`），输入 `trim`，找到 `Trim Trailing Whitespace` 并回车
+    + 按下 <kbd>Ctrl + Shift + P</kbd>（macOS 为 <kbd>Cmd + Shift + P</kbd>），输入 `trim`，找到 `Trim Trailing Whitespace` 并回车
 + 快速将多行文本转换为单行（用空格分隔）
-    + 选中多行文本，按下 `Ctrl + J`（macOS 中也可以用 `Option + J`）
+    + 选中多行文本，按下 <kbd>Ctrl + Shift + P</kbd>（macOS 为 <kbd>Cmd + Shift + P</kbd>），输入 `join`，找到 `Join Lines` 并回车
 
 ---
 
 # VSCode 使用技巧
 
 + 搜索和替换
-    + 按下 `Ctrl + F`（macOS 中为 `Cmd + F`）：在当前文件中搜索
-    + 按下 `Ctrl + H`（macOS 中为 `Cmd + Option + F`）：在当前文件中搜索并替换
-    + 按下 `Ctrl + Shift + F`（macOS 中为 `Cmd + Shift + F`）：在整个工作区中搜索
-    + 按下 `Ctrl + Shift + H`（macOS 中为 `Cmd + Shift + H`）：在整个工作区中搜索并替换
+    + 按下 <kbd>Ctrl + F</kbd>（macOS 中为 <kbd>Cmd + F</kbd>）：在当前文件中搜索
+    + 按下 <kbd>Ctrl + H</kbd>（macOS 中为 <kbd>Cmd + Option + F</kbd>）：在当前文件中搜索并替换
+    + 按下 <kbd>Ctrl + Shift + F</kbd>（macOS 中为 <kbd>Cmd + Shift + F</kbd>）：在整个工作区中搜索
+    + 按下 <kbd>Ctrl + Shift + H</kbd>（macOS 中为 <kbd>Cmd + Shift + H</kbd>）：在整个工作区中搜索并替换
 + 三种搜索方式
     + 支持区分大小写搜索（点击搜索框右侧的 `Aa` 图标）
     + 支持全字匹配搜索（点击搜索框右侧的 `a̲b̲` 图标）
@@ -1721,6 +1723,26 @@ name: student-benefits
 	  + Microsoft Azure 云服务器 + $100 credits
 	  + Namecheap 的免费域名和 SSL 证书（1 年）、Name.com 的免费域名
 	  + 等等
+)
+
+---
+
+#
+
+![:callout info](
+.bold[.large[AWS Educate]]
+
++ 网址：https://aws.amazon.com/education/awseducate/
+  + 用学校邮箱（sjtu.edu.cn）注册/绑定账号，通过学生证认证
+  + 可以免费获得哪些福利？
+      + $100 AWS credits（有效期 2 年）
+          + https://aws.amazon.com/free/
+
+.bold[.large[阿里云高校用云支持计划]]
+
++ 网址：https://university.aliyun.com
+    + 学信网认证
+    + 国内大学生完成学生身份认证后可领取 ¥300/年直抵用优惠券
 )
 
 ---
