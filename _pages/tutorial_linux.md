@@ -25,7 +25,7 @@ class: center
 .huge[张王优]
 
 .cute.orange[2025 年 10 月 27 日]<br/>
-.small[.cute.gray[更新于 2025 年 12 月 5 日]]
+.small[.cute.gray[更新于 2026 年 1 月 23 日]]
 
 
 ---
@@ -92,7 +92,7 @@ name: ssh-login
     + Linux / macOS：`~/.ssh/config`
     + Windows：`C:\Users\your_username\.ssh\config`
 + 第三方终端模拟器
-    + Windows：[MobaXterm](https://mobaxterm.mobatek.net)、[Xshell](https://www.netsarang.com/en/xshell/)、[WezTerm](https://wezterm.org/index.html) 等
+    + Windows：[MobaXterm](https://mobaxterm.mobatek.net)、[Xshell](https://www.netsarang.com/en/xshell/)、[WezTerm](https://wezterm.org/index.html)、[Wave Terminal](https://docs.waveterm.dev/) 等––––––
     + macOS：[iTerm2](https://iterm2.com/)、[Kitty](https://sw.kovidgoyal.net/kitty/quickstart/)、[Ghostty](https://ghostty.org) 等
 
 --
@@ -1081,16 +1081,20 @@ print(a)  # -> tensor([3, 4, 1, 2])，正确交换了两者元素的值
 
 # PyTorch 使用技巧与踩坑
 
+.midsize[
 + 调试 checklist
     + 检查实验用的数据（包括 dump 之后的特征）是否正常？【不要想当然，在做实验之前最好抽样验证，以免浪费时间】
     + 上一次 Debug 时修改的代码有没有还原回去？
     + 如果 CTC 模块的 loss 为 inf 或者梯度为 nan，请检查训练数据中是否有 CTC 输入特征长度小于标签序列长度的样本
     + 如果存在 PyTorch 模型不更新的问题，请检查代码中是否有 `.detach()` 或者 `with torch.no_grad()` 使用不当的情况
     + 用预训练模型提取特征时，是否固定住该部分参数，以及设置 `model.eval()`？
+
 + 调试案例
     + 中文博客：https://emrys365.github.io/post/debug-gu-shi-01/
+    + Debugging PyTorch: https://github.com/stas00/the-art-of-debugging/tree/master/pytorch
     + 英文博客：[the bug that taught me more about PyTorch than years of using it](https://elanapearl.github.io/blog/2025/the-bug-that-taught-me-pytorch/)
       + 小红书翻译版：http://xhslink.com/o/94l2GKgFEwd
+]
 
 ---
 
@@ -1269,6 +1273,48 @@ git checkout path/to/file
 
 ---
 
+# Git 常用命令
+
+.normalsize[4.] 基于当前分支的代码，创建一个新的分支
+
+```bash
+# 创建一个新的分支，并切换到该分支
+git checkout -b new_branch
+
+# 切换到已有的分支
+git checkout branch_name
+```
+
+.normalsize[5.] 将当前分支的代码推送到远程仓库
+```bash
+# 打包当前目录的全部代码（. 表示当前目录）改动
+git add .
+# 打包当前目录的指定文件或目录的改动
+git add "path/to/file1" "path/to/file2" "path/to/dir"
+# 提交代码改动
+git commit -m "commit message"
+
+# 将当前分支的代码推送到远程仓库的对应分支（加 -f 参数可强制覆盖）
+git push origin branch_name [-f]
+```
+
+---
+
+# Git 常用命令
+
+.normalsize[6.] 查看/修改本地仓库对应的远程仓库信息
+
+```bash
+# 查看本地仓库对应的远程仓库信息
+git remote -v
+
+# 删除并重新添加本地仓库对应的远程仓库信息（可用于更换远程仓库地址）
+git remote remove origin
+git remote add origin https://github.com/UserName/RepoName
+```
+
+---
+
 # GitHub 仓库
 
 + GitHub 是目前最大的.gray[<del>同性交友</del>]开源代码托管平台，拥有海量的开源项目资源
@@ -1286,6 +1332,35 @@ git checkout path/to/file
 ]
 )
 ]
+
+---
+
+# GitHub 仓库提交 Pull Request (PR)
+
+1. 如果要提交 PR 到不同的仓库（如自己没有直接写权限的仓库），需先 .red[fork] 目标仓库到自己的 GitHub 账号下（可参考 [GitHub 官方文档](https://docs.github.com/zh/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)）
+![:scale 78%](https://docs.github.com/assets/cb-34352/mw-1440/images/help/repository/fork-button.webp)
+
+2. 提交 PR 前，应在本地仓库先创建一个.bold[专用的 PR 分支]（名称.red[不同于]目标仓库的目标分支，如 `feature/new_feature`）
+3. 在创建的专用 PR 分支里进行代码修改，并将其 push 到本地仓库对应的 GitHub 远程仓库（注意不是目标仓库的远程仓库，而是自己 fork 后的远程仓库）
+4. 在 GitHub 的.bold[目标仓库] PR 页面创建 PR（参考 [GitHub 官方文档](https://docs.github.com/zh/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)），设置合理的 PR 标题和描述（包含修改内容和原因），等待 PR 审核和合并
+5. 提交 PR 后，在本地仓库继续修改代码并 push，相关修改会自动同步到 PR
+6. 等待 PR 被合并后，可放心地删除本地仓库的专用 PR 分支
+
+---
+
+# GitHub 仓库提交 Pull Request (PR)
+
+![:callout info, Github PR 代码审查的小技巧](
++ 在 PR 页面，点击「Files changed」标签，可以查看 PR 的详细修改内容
+
++ 针对审查者
+    + 在 PR 链接末尾添加 `.diff`，可快速查看 PR 的改动内容（纯文本）
+        + 示例：https://github.com/espnet/espnet/pull/6123.diff
+    + 在「Files changed」选项卡页面，勾选每项文件改动的右上角「Viewed」，可快速标记为<b>已查看</b>，直到下次 commit 改动该文件
+    + 在「Files changed」选项卡页面，将光标移动到每项文件改动的行号上，会显示 <kbd>+</kbd> 键，点击即可针对该行添加 comment 或代码改动建议
+        + 进一步地，可以在 <kbd>+</kbd> 键出现后，拖动光标选择多行，即可针对多行添加 comment 或代码改动建议
+    + 全部审查完成后，点击页面右上角的「Submit comments」，即可提交
+)
 
 ---
 
