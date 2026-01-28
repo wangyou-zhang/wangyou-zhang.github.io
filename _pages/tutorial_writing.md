@@ -359,7 +359,7 @@ name: references
 # BibTeX 格式
 
 ```bibtex
-# 期刊论文
+% 期刊论文
 @article{引用标签,
   author    = {作者姓名},
   title     = {论文标题},
@@ -372,7 +372,7 @@ name: references
 ```
 
 ```bibtex
-# 会议论文
+% 会议论文
 @inproceedings{引用标签,
   author    = {作者姓名},
   title     = {论文标题},
@@ -516,9 +516,9 @@ name: latex-skills
 + https://www.overleaf.com/learn
 + https://oi-wiki.org/tools/latex/
 
-> 参考文件：[example.tex](/files/example.tex&#rpar;
-
 )
+
++ 参考文件：[example.tex](/files/example.tex)
 
 ---
 
@@ -667,12 +667,12 @@ name: latex-skills
   + 字体控制
 
     ```tex
-    \textsf{H}              # 无衬线字体
-    \texttt{test-clean}     # 等宽字体
-    \textsc{AnyEnhance}     # 全大写字母（区分大小型字母）
-    \textbf{best results}   # 粗体
-    \textit{et al.}         # 斜体
-    \emph{This implies}     # 强调（斜体）
+    \textsf{H}              % 无衬线字体
+    \texttt{test-clean}     % 等宽字体
+    \textsc{AnyEnhance}     % 全大写字母（区分大小型字母）
+    \textbf{best results}   % 粗体
+    \textit{et al.}         % 斜体
+    \emph{This implies}     % 强调（斜体）
     ```
 )
 
