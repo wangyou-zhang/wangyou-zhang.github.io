@@ -1,0 +1,315 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 第一行通常设置文档类型，有的模板会采用自定义类型
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[twocolumn, 10pt, a4paper]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 一般在开头导入内置/第三方包
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%-----------------------------------------
+% 解决字体渲染问题
+%-----------------------------------------
+\usepackage[utf8]{inputenc} % allow utf-8 input
+% for typesetting underscore as a character
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}        % for using \mathbb
+
+
+%-----------------------------------------
+% 支持基本数学公式环境
+%-----------------------------------------
+\usepackage{amsmath}        % required by \begin{align}...\end{align}
+
+
+%-----------------------------------------
+% 渲染图表
+%-----------------------------------------
+\usepackage{booktabs}              % for using toprule, midrule, bottomrule
+\usepackage{multirow}              % for merging multiple rows into one cell
+\usepackage{graphicx}              % for using \resizebox
+\usepackage[table]{xcolor}         % for using \rowcolor, \cellcolor
+
+\usepackage{tablefootnote}         % for putting footnote below tables
+\usepackage[labelfont=bf]{caption} % for making captions bold in figures and tables
+\captionsetup[table]{skip=1pt}     % for controlling caption distance
+\captionsetup[figure]{skip=1pt}    % for controlling caption distance
+
+
+%-----------------------------------------
+% 参考文献的引用
+%-----------------------------------------
+\usepackage{cite}           % change the citation format from [1,2,3] to [1-3]
+
+
+%-----------------------------------------
+% 其他
+%-----------------------------------------
+\usepackage{setspace}     % for using \setstretch (must be loaded before hyperref)
+
+
+%-----------------------------------------
+% 添加跳转超链接，高亮不同类型的超链接
+%-----------------------------------------
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=black,
+    citecolor=magenta,
+    pdfpagemode=FullScreen,
+}
+
+%\usepackage{footnotebackref}  % 添加脚注的反向跳转
+
+
+%-----------------------------------------
+% 添加自定义命令（如 \var），便于反复使用
+%-----------------------------------------
+
+%-------------------
+% （1）快速隐藏表格的某一列
+%-------------------
+\newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
+
+%-------------------
+% （2）专有名词/变量快速跳转到定义处
+%-------------------
+\usepackage{etoolbox} % for using \ifcsdef
+
+% Shift-up the jump location of \hypertarget by one line
+\makeatletter
+  \newcommand{\linkdest}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
+\makeatother
+% Define a command to typeset a symbol and create a hyperlink (without color) to its first appearance
+\newcounter{varsymbolcount}
+\newcommand{\var}[1]{%
+  \ifcsdef{symbol:#1}{%
+    % Symbol has been defined before, create a hyperlink to its first appearance
+    {\hypersetup{hidelinks}\hyperlink{symbol:#1}{#1}}%
+  }{%
+    % First appearance of the symbol, create a hyperlink target
+    \stepcounter{varsymbolcount}%
+    \linkdest{symbol:#1}{}#1%
+    \global\expandafter\def\csname symbol:#1\endcsname{}% Mark symbol as defined
+  }%
+}
+
+
+%-----------------------------------------
+% 节省空间的技巧
+%-----------------------------------------
+
+%-------------------
+% （1）减少公式、图片、表格的上下间距
+%-------------------
+% reduce the distance between floats on the top or the bottom and the text
+ \setlength{\textfloatsep}{5pt plus 0.0pt minus 2.0pt}
+ % reduce the distance between two floats
+ \setlength{\floatsep}{5pt plus 0.0pt minus 2.0pt}
+ % reduce the distance between two floats [h]
+ \setlength{\intextsep}{5pt plus 0.0pt minus 2.0pt}
+
+%-------------------
+% （2）减少参考文献之间的间隔
+%-------------------
+\let\oldthebibliography\thebibliography
+\let\endoldthebibliography\endthebibliography
+\renewenvironment{thebibliography}[1]{
+  \begin{oldthebibliography}{#1}
+  \setlength{\itemsep}{-0.1em}
+  \setlength{\parskip}{0.em}
+}
+{
+  \end{oldthebibliography}
+}
+
+%-------------------
+% （3）拉伸表格行/列间距
+%-------------------
+
+% 行间距
+%\begin{table}
+%   \setstretch{0.92}
+%   ...
+%\end{table}
+
+% 列间距
+%\begin{table}
+%    \setlength{\tabcolsep}{3pt}
+%\end{table}
+
+
+
+
+%-----------------------------------------
+% 定义 BSTcontrol，用于控制参考文献的作者列表长度
+%-----------------------------------------
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack
+  \@for\@citeb:=#2\do{%
+    \edef\@citeb{\expandafter\@firstofone\@citeb}%
+    \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 填写标题、作者、单位等基本信息
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{A Good Title is Worth a Thousand Words}
+
+\author{Three Zhang$^{1,2}$ \and Four Li$^1$ \and Five Wang$^2$}
+\date{%
+    $^1$Organization 1\\%
+    $^2$Organization 2 has such a looooooooooooong name that it\\
+    cannot properly fit in a single line
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 正文从这里开始
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+%-----------------------------------------    
+\bstctlcite{IEEEexample:BSTcontrol} % place this line right below \begin{document}
+%-----------------------------------------
+
+
+% 加了下面这一行才会显示标题、作者等信息
+\maketitle
+
+%-----------------------------------------
+% 以下开始填写摘要
+%-----------------------------------------
+
+\begin{abstract}
+    Don't cite references in abstract.
+    Usually we don't write multiple paragraphs in abstract.
+    Mind the word count limit in the paper template (can differ across conferences/journals)!
+    \textbf{Basic structure:} (1) 1 sentence describing the background; (2) 1 ``however'' sentence stating current problems; (3) 2--3 sentences introducing your goal and contributions; (4) 1--2 sentences highlighting the experimental results or key findings.
+\end{abstract}
+
+%-----------------------------------------
+% 以下开始填写正文实际内容（如不同章节、参考文献等）
+%-----------------------------------------
+
+\section{Introduction}
+\label{sec:intro}
+
+Define the \textbf{full names} of abbreviations (initials) when they appear for the first time!
+Even if they have already been defined in \emph{Abstract}, they should be defined again in the main body (starting from \emph{Introduction}).
+For example, convolutional neural networks (CNNs) and Transformer~\cite{Attention-Vaswani2017} can be combined to form new architectures.
+
+
+\section{Related Works}
+\label{sec:related}
+
+In \texttt{AISHELL-3}~\cite{AISHELL3-Shi2021}, it is reported that ...
+
+
+\section{Proposed Method}
+\label{sec:proposed}
+
+We propose a new model called \textsc{HahahahaNet}.
+It takes as input encoded features extracted from the DNSMOS P.835~\cite{DNSMOS-Reddy2022} model\footnote{\url{https://github.com/microsoft/DNS-Challenge/blob/master/DNSMOS/DNSMOS/sig_bak_ovr.onnx}}.
+
+\subsection{Problem formulation}
+\label{ssec:problem}
+
+Let $\mathbf{A} \in \mathbb{C}A^{F \times F}$ be the xxx matrix, where $F$ is the frequency dimension. We have ...
+{\allowdisplaybreaks % This allows for breaking multiple equations into different columns
+\begin{align}
+    \mathbf{X} &= \mathbf{\Phi}^{\textsf{H}}\mathbf{U}^{\textsf{T}}\mathbf{A}^{-1} \quad\in\mathbb{C}^{T \times F} \label{eq:example2} \,, \\
+    M_f &= \dfrac{1}{T} \left(\sum_{t=0}^{T-1} w_t |X|^2_{t,f}\right)^{0.5} \label{eq:example3} \,,
+\end{align}
+}% <------ include this % to avoid space indent in the sentence below
+where \var{$M_f$} represents the estimated mask of the $f$-th frequency bin.
+
+Jepsen \textit{et al.}~\cite{Study-Jepsen2025} found that training speech enhancement models with noisy signal labels based on scale-invariant signal-to-noise ratio (\var{SI-SNR})~\cite{SISNR-LeRoux2019} can lead to inferior performance.
+
+\subsection{First method}
+\label{ssec:method1}
+
+CHiME-6~\cite{CHiME6-Watanabe2020}
+
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.88\textwidth]{assets/images/logo_audiocc.png}
+  \captionsetup{labelfont=bf}
+  \caption[overview]{Overview of the proposed model.}
+  \label{fig:overview}
+  \vspace{-0.5em}
+\end{figure*}
+
+\subsection{Second method}
+\label{ssec:method2}
+
+We use the mask \var{$M_f$} to refine the final prediction.
+
+
+\section{Experiments}
+\label{sec:exp}
+
+We evaluate the model performance using the \var{SI-SNR} metric.
+
+
+\subsection{Experimental setup}
+\label{ssec:exp_setup}
+
+
+\subsection{Results and analysis}
+\label{ssec:exp_results}
+
+{
+% reduce the distance between columns in a table
+%\setstretch{0.92}
+\setlength{\tabcolsep}{3pt}
+\begin{table}[t]
+    \caption{Tag occurrences in the dataset.}
+    \label{tab:data_tags}
+    \centering
+    \resizebox{1.0\columnwidth}{!}{% <---- don't forget this %
+        \begin{tabular}{lc|l|cc} 
+        \toprule
+        \multicolumn{2}{c|}{\textbf{Tag}} & \textbf{Note} & \textbf{Fullset} & \textbf{Subset} \\
+        \midrule
+        \multirow{3}{*}{\shortstack[l]{Data\\Domain}} & real\_recording & recorded directly &  & 0 \\
+        & enhanced & (suspiciously)\,processed by SE systems & 0 &  \\
+        & synthetic & (suspiciously)\,synthetic speech & 0 &  \\
+        \hline
+        \rowcolor[HTML]{EEEEEE} & non\_speech & w/o any intelligible speech\tablefootnote{This means ...} &  &  \\
+        \rowcolor[HTML]{EEEEEE} \multirow{-2}{*}{\shortstack[l]{Speech Type}} & read\_speech &  &  &  \\
+       \bottomrule
+       \end{tabular}% <---- don't forget this %
+    }
+\end{table}
+}
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+
+\section*{Acknowledgment}
+
+This work was supported by xxx.
+
+
+%-----------------------------------------
+% 一般在文末添加参考文献
+%-----------------------------------------
+
+\bibliographystyle{IEEEtran}
+\bibliography{mybib}
+
+
+
+\end{document}
