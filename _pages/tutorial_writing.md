@@ -509,7 +509,7 @@ layout: true
 ---
 name: latex-skills
 
-# \\(\LaTeX\\) 介绍
+# LaTeX 介绍
 
 ![:callout info, LaTeX 学习资料](
 
@@ -541,9 +541,9 @@ name: latex-skills
 
     \}                 →   }
 
-    \textasciitilde    →   ~
-    \textasciicircum   →   ^
-    \textbackslash     →   \
+    \textasciitilde{}  →   ~
+    \textasciicircum{} →   ^
+    \textbackslash{}   →   \
     \textless{}        →   <
     \textgreater{}     →   >
     ```
@@ -615,9 +615,9 @@ name: latex-skills
 + 行间数学公式：
 
 ```latex
-\\[
+\[
   ...  
-\\]
+\]
 
 \begin{equation}
   ...
