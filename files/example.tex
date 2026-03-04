@@ -29,6 +29,7 @@
 \usepackage{multirow}              % for merging multiple rows into one cell
 \usepackage{graphicx}              % for using \resizebox
 \usepackage[table]{xcolor}         % for using \rowcolor, \cellcolor
+\usepackage{arydshln}              % for using \hdashline (dashed lines in tables)
 
 \usepackage{tablefootnote}         % for putting footnote below tables
 \usepackage[labelfont=bf]{caption} % for making captions bold in figures and tables
@@ -242,7 +243,7 @@ CHiME-6~\cite{CHiME6-Watanabe2020}
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.88\textwidth]{assets/images/logo_audiocc.png}
+  \includegraphics[width=0.88\textwidth]{../images/remark.js/logo_audiocc.png}
   \captionsetup{labelfont=bf}
   \caption[overview]{Overview of the proposed model.}
   \label{fig:overview}
@@ -277,14 +278,14 @@ We evaluate the model performance using the \var{SI-SNR} metric.
     \label{tab:data_tags}
     \centering
     \resizebox{1.0\columnwidth}{!}{% <---- don't forget this %
-        \begin{tabular}{lc|l|cc} 
+        \begin{tabular}{lc|l|cH} 
         \toprule
         \multicolumn{2}{c|}{\textbf{Tag}} & \textbf{Note} & \textbf{Fullset} & \textbf{Subset} \\
         \midrule
         \multirow{3}{*}{\shortstack[l]{Data\\Domain}} & real\_recording & recorded directly &  & 0 \\
         & enhanced & (suspiciously)\,processed by SE systems & 0 &  \\
-        & synthetic & (suspiciously)\,synthetic speech & 0 &  \\
-        \hline
+        & synthetic & (suspiciously)\,synthetic speech & 0 &  \\[2pt]
+        \hdashline\noalign{\vskip 2pt}
         \rowcolor[HTML]{EEEEEE} & non\_speech & w/o any intelligible speech\tablefootnote{This means ...} &  &  \\
         \rowcolor[HTML]{EEEEEE} \multirow{-2}{*}{\shortstack[l]{Speech Type}} & read\_speech &  &  &  \\
        \bottomrule

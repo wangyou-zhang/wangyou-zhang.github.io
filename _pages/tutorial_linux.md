@@ -1313,6 +1313,8 @@ git remote remove origin
 git remote add origin https://github.com/UserName/RepoName
 ```
 
++ SJTU 官方提供的 GitLab 代码托管平台：https://git.sjtu.edu.cn/
+
 ---
 
 # GitHub 仓库

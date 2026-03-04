@@ -487,6 +487,8 @@ name: references
     + 它上面的很多 arXiv 论文实则已经正式发表，如 ICLR、Interspeech 等，应尽量引用正式发表的版本（经过同行评审，更具可信度）
     + [小红书 - 所有 IEEE 论文在谷歌学术的检索出现重大 bug](http://xhslink.com/o/PYf4IpYSvz)
 
++ [HalluCitation Matters: Revealing the Impact of Hallucinated References with 300 Hallucinated Papers in ACL Conferences](https://arxiv.org/abs/2601.18724)
+
 + **练习：**尝试找到下列论文的 BibTeX 条目：
 
     + [KB+15] Adam: A Method for Stochastic Optimization
@@ -546,6 +548,18 @@ name: latex-skills
     \textbackslash{}   →   \
     \textless{}        →   <
     \textgreater{}     →   >
+    ```
+
+---
+
+# 基本语法
+
++ 特殊符号的正确输入格式：
+
+    ```tex
+    双引号：``...''     →   “...”
+
+    单引号：`...'       →   ‘...’
     ```
 
 ---
@@ -630,9 +644,9 @@ name: latex-skills
 ```
 
 + `\cite{引用标签}`：文中引用参考文献
-+ `\citep{引用标签}`：圆括号形式引用参考文献（natbib 宏包）
-+ `\ref{标签}`：引用章节、图片、表格等标签的编号（不带括号）
-+ `\eqref{标签}`：引用公式编号（带括号）
+    + `\citep{引用标签}`：圆括号形式引用参考文献（natbib 宏包）
++ `\ref{标签}`：引用章节、图片、表格等标签的编号（不带括号）；<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;与 `\label{定义标签}` 配合使用
+    + `\eqref{标签}`：引用公式编号（带括号）
 
 ---
 
@@ -730,6 +744,8 @@ name: figure-chart-table
 # 在线制表工具
 1. [Create LaTeX Tables Online – TablesGenerator.com](http://www.tablesgenerator.com/)
 2. [Advanced Table Editor - LaTeX, Typst, HTML and more – latex-tables.com](https://www.latex-tables.com/)
+
+<iframe width="100%" height="400" src="http://www.tablesgenerator.com/" title="Create LaTeX Tables Online"></iframe>
 
 ---
 
