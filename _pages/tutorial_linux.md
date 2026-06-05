@@ -92,7 +92,7 @@ name: ssh-login
     + Linux / macOS：`~/.ssh/config`
     + Windows：`C:\Users\your_username\.ssh\config`
 + 第三方终端模拟器
-    + Windows：[MobaXterm](https://mobaxterm.mobatek.net)、[Xshell](https://www.netsarang.com/en/xshell/)、[WezTerm](https://wezterm.org/index.html)、[Wave Terminal](https://docs.waveterm.dev/) 等––––––
+    + Windows：[MobaXterm](https://mobaxterm.mobatek.net)、[Xshell](https://www.netsarang.com/en/xshell/)、[WezTerm](https://wezterm.org/index.html)、[Wave Terminal](https://docs.waveterm.dev/) 等
     + macOS：[iTerm2](https://iterm2.com/)、[Kitty](https://sw.kovidgoyal.net/kitty/quickstart/)、[Ghostty](https://ghostty.org) 等
 
 --
@@ -1820,6 +1820,11 @@ name: student-benefits
 + 网址：https://university.aliyun.com
     + 学信网认证
     + 国内大学生完成学生身份认证后可领取 ¥300/年直抵用优惠券
+
+.bold[.large[其他]]
+
++ 教育优惠资源福利汇总导航：https://nav.edumails.cn
+
 )
 
 ---
