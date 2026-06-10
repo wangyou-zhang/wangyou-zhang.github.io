@@ -70,3 +70,23 @@
   padding: var(--callout-content-padding);
   background-color: var(--callout-content-background);
 }
+
+.callout.has-steps .callout-step {
+  display: none;
+}
+
+.callout.has-steps .callout-step.is-visible {
+  display: block;
+  animation: callout-step-fade-in 0.24s ease-out;
+}
+
+@keyframes callout-step-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

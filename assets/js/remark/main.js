@@ -1,5 +1,107 @@
 var slideshow;
 
+function init_callout_steps(slideshowInstance)
+{
+  if (window.__calloutStepsInitialized) {
+    return;
+  }
+  window.__calloutStepsInitialized = true;
+
+  function getCurrentSlideRoot()
+  {
+    return document.querySelector('.remark-visible .remark-slide-content');
+  }
+
+  function revealNextCalloutStep()
+  {
+    var root = getCurrentSlideRoot();
+    if (!root) {
+      return false;
+    }
+
+    var callouts = root.querySelectorAll('.callout.has-steps');
+    for (var i = 0; i < callouts.length; i++) {
+      var hiddenStep = callouts[i].querySelector('.callout-step:not(.is-visible)');
+      if (hiddenStep) {
+        hiddenStep.classList.add('is-visible');
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function hidePreviousCalloutStep()
+  {
+    var root = getCurrentSlideRoot();
+    if (!root) {
+      return false;
+    }
+
+    var callouts = root.querySelectorAll('.callout.has-steps');
+    for (var i = callouts.length - 1; i >= 0; i--) {
+      var visibleSteps = callouts[i].querySelectorAll('.callout-step.is-visible');
+      if (visibleSteps.length > 1) {
+        visibleSteps[visibleSteps.length - 1].classList.remove('is-visible');
+        return true;
+      }
+    }
+    return false;
+  }
+
+  var forwardKeys = {
+    'ArrowRight': true,
+    'ArrowDown': true,
+    'PageDown': true,
+    'Enter': true,
+    ' ': true,
+  };
+
+  var backwardKeys = {
+    'ArrowLeft': true,
+    'ArrowUp': true,
+    'PageUp': true,
+    'Backspace': true,
+  };
+
+  document.addEventListener('keydown', function (event) {
+    if (event.metaKey || event.ctrlKey || event.altKey) {
+      return;
+    }
+
+    if (forwardKeys[event.key] && revealNextCalloutStep()) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    if (backwardKeys[event.key] && hidePreviousCalloutStep()) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, true);
+
+  if (slideshowInstance && typeof slideshowInstance.on === 'function') {
+    slideshowInstance.on('showSlide', function () {
+      var root = getCurrentSlideRoot();
+      if (!root) {
+        return;
+      }
+
+      var callouts = root.querySelectorAll('.callout.has-steps');
+      for (var i = 0; i < callouts.length; i++) {
+        var steps = callouts[i].querySelectorAll('.callout-step');
+        for (var j = 0; j < steps.length; j++) {
+          if (j === 0) {
+            steps[j].classList.add('is-visible');
+          } else {
+            steps[j].classList.remove('is-visible');
+          }
+        }
+      }
+    });
+  }
+}
+
 // Load file and read content
 function loadFile(event)
 {
@@ -76,15 +178,58 @@ function register_macros()
     }
 
     // Convert escaped brackets back to normal brackets `(` and `)` for markdown parsing
-    var content = this.replace(/&#lpar;/g, '(').replace(/&#rpar;/g, ')').replace(/&#lspar;/g, '[').replace(/&#rspar;/g, ']');
+    var content = this.replace(/&#lpar;/g, '(').replace(/&#rpar;/g, ')').replace(/&#lspar;/g, '[').replace(/&#rspar;/g, ']').replace(/&#lcpar;/g, '{').replace(/&#rcpar;/g, '}');
 
-    return '<div class="callout callout-' + type + '">'
+    var step_blocks = content.split(/\n\s*--\s*\n/g);
+    var callout_content_html = '';
+
+    if (step_blocks.length > 1) {
+      var next_ordered_start = null;
+
+      for (var s = 0; s < step_blocks.length; s++) {
+        var block = step_blocks[s].trim();
+        if (!block) {
+          continue;
+        }
+
+        // Ensure correct numbering for ordered lists in each step block
+        var block_html = remark.convert(block);
+        var explicit_order_match = block.match(/^\s*(\d+)\.\s+/);
+        var desired_start = null;
+
+        if (explicit_order_match && parseInt(explicit_order_match[1], 10) > 1) {
+          desired_start = parseInt(explicit_order_match[1], 10);
+        } else if (next_ordered_start && next_ordered_start > 1) {
+          desired_start = next_ordered_start;
+        }
+
+        if (desired_start && /<ol(?:\s[^>]*)?>/.test(block_html) && !/<ol[^>]*\sstart=/.test(block_html)) {
+          block_html = block_html.replace(/<ol(\s[^>]*)?>/, '<ol$1 start="' + desired_start + '">');
+        }
+
+        var first_ol_match = block_html.match(/<ol[^>]*>([\s\S]*?)<\/ol>/);
+        if (first_ol_match) {
+          var start_attr_match = block_html.match(/<ol[^>]*\sstart="(\d+)"/);
+          var base_start = start_attr_match ? parseInt(start_attr_match[1], 10) : 1;
+          var item_count = (first_ol_match[1].match(/<li\b/g) || []).length;
+          next_ordered_start = base_start + item_count;
+        } else {
+          next_ordered_start = null;
+        }
+
+        callout_content_html += '<div class="callout-step' + (callout_content_html === '' ? ' is-visible' : '') + '">' + block_html + '</div>';
+      }
+    } else {
+      callout_content_html = remark.convert(content);
+    }
+
+    return '<div class="callout callout-' + type + (step_blocks.length > 1 ? ' has-steps' : '') + '">' 
          +   '<div class="callout-title" dir="auto">'
          +     '<div class="callout-icon">' + icon_svg + '</div>'
          +     '<div class="callout-title-inner">' + title + '</div>'
          +   '</div>'
          +   '<div class="callout-content">'
-         +     remark.convert(content)
+         +     callout_content_html
          +   '</div>'
          + '</div>';
   }
@@ -216,6 +361,13 @@ function loadContent()
   });
   // slideshow = remark.create({ratio: "16:9"});
   // slideshow.gotoFirstSlide();         // uncomment this line to always start from the first slide
+
+  init_callout_steps(slideshow);
+
+  // Re-typeset MathJax after remark creates slides from textarea content
+  if (typeof MathJax !== 'undefined') {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  }
 }
 
 
