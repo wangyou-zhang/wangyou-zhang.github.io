@@ -21,9 +21,25 @@ function init_callout_steps(slideshowInstance)
 
     var callouts = root.querySelectorAll('.callout.has-steps');
     for (var i = 0; i < callouts.length; i++) {
-      var hiddenStep = callouts[i].querySelector('.callout-step:not(.is-visible)');
-      if (hiddenStep) {
-        hiddenStep.classList.add('is-visible');
+      var hiddenFragments = callouts[i].querySelectorAll('.callout-fragment[data-step][hidden]');
+      if (!hiddenFragments.length) {
+        continue;
+      }
+
+      var nextStep = Infinity;
+      for (var j = 0; j < hiddenFragments.length; j++) {
+        var stepValue = parseInt(hiddenFragments[j].getAttribute('data-step'), 10);
+        if (!isNaN(stepValue) && stepValue < nextStep) {
+          nextStep = stepValue;
+        }
+      }
+
+      if (nextStep !== Infinity) {
+        var nextStepFragments = callouts[i].querySelectorAll('.callout-fragment[data-step="' + nextStep + '"]');
+        for (var k = 0; k < nextStepFragments.length; k++) {
+          nextStepFragments[k].removeAttribute('hidden');
+          nextStepFragments[k].classList.add('is-visible');
+        }
         return true;
       }
     }
@@ -39,9 +55,22 @@ function init_callout_steps(slideshowInstance)
 
     var callouts = root.querySelectorAll('.callout.has-steps');
     for (var i = callouts.length - 1; i >= 0; i--) {
-      var visibleSteps = callouts[i].querySelectorAll('.callout-step.is-visible');
-      if (visibleSteps.length > 1) {
-        visibleSteps[visibleSteps.length - 1].classList.remove('is-visible');
+      var visibleFragments = callouts[i].querySelectorAll('.callout-fragment[data-step]:not([hidden])');
+      var maxStep = 0;
+
+      for (var j = 0; j < visibleFragments.length; j++) {
+        var stepValue = parseInt(visibleFragments[j].getAttribute('data-step'), 10);
+        if (!isNaN(stepValue) && stepValue > maxStep) {
+          maxStep = stepValue;
+        }
+      }
+
+      if (maxStep > 0) {
+        var maxStepFragments = callouts[i].querySelectorAll('.callout-fragment[data-step="' + maxStep + '"]');
+        for (var k = 0; k < maxStepFragments.length; k++) {
+          maxStepFragments[k].setAttribute('hidden', 'hidden');
+          maxStepFragments[k].classList.remove('is-visible');
+        }
         return true;
       }
     }
@@ -89,17 +118,135 @@ function init_callout_steps(slideshowInstance)
 
       var callouts = root.querySelectorAll('.callout.has-steps');
       for (var i = 0; i < callouts.length; i++) {
-        var steps = callouts[i].querySelectorAll('.callout-step');
-        for (var j = 0; j < steps.length; j++) {
-          if (j === 0) {
-            steps[j].classList.add('is-visible');
+        var fragments = callouts[i].querySelectorAll('.callout-fragment[data-step]');
+        for (var j = 0; j < fragments.length; j++) {
+          var stepValue = parseInt(fragments[j].getAttribute('data-step'), 10);
+          if (stepValue === 0) {
+            fragments[j].removeAttribute('hidden');
+            fragments[j].classList.add('is-visible');
           } else {
-            steps[j].classList.remove('is-visible');
+            fragments[j].setAttribute('hidden', 'hidden');
+            fragments[j].classList.remove('is-visible');
           }
         }
       }
     });
   }
+}
+
+function unescape_inside_macro(text) {
+  return text
+    .replace(/&#lpar;/g, '(')
+    .replace(/&#rpar;/g, ')')
+    .replace(/&#lspar;/g, '[')
+    .replace(/&#rspar;/g, ']')
+    .replace(/&#lcpar;/g, '{')
+    .replace(/&#rcpar;/g, '}');
+}
+
+function inline_step_markers(content, marker) {
+  var lines = content.split('\n');
+  var output = [];
+  var fenceToken = null;
+
+  for (var i = 0; i < lines.length; i++) {
+    // Detect fenced code blocks and skip processing lines inside them
+    var fenceMatch = lines[i].match(/^\s*(`{3,}|~{3,})/);
+    if (fenceMatch) {
+      var currentToken = fenceMatch[1].charAt(0);
+      // Switch fence token on/off when encountering the same fence delimiter
+      if (!fenceToken) {
+        fenceToken = currentToken;
+      } else if (fenceToken === currentToken) {
+        fenceToken = null;
+      }
+      output.push(lines[i]);
+      continue;
+    }
+
+    if (fenceToken) {
+      output.push(lines[i]);
+      continue;
+    }
+
+    // Replace `--` with the marker and merge it to the end of the previous line if possible, otherwise keep it as a separate line.
+    // This allows step markers to be placed inline in the markdown content without affecting the layout when rendered.
+    if (/^--\s*$/.test(lines[i])) {
+      var commentMarker = '<!--' + marker + '-->';
+      var merged = false;
+
+      for (var j = output.length - 1; j >= 0; j--) {
+        if (!/^\s*$/.test(output[j])) {
+          // Avoid appending marker to fence delimiter lines.
+          if (/^\s*(`{3,}|~{3,})/.test(output[j])) break;
+          output[j] += commentMarker;
+          merged = true;
+          break;
+        }
+      }
+
+      if (!merged) {
+        output.push(commentMarker);
+      }
+      continue;
+    }
+
+    output.push(lines[i]);
+  }
+
+  return output.join('\n');
+}
+
+function render_callout_with_steps(content)
+{
+  var marker = 'CALLSTEP_MARKER';
+  var markerized_content = inline_step_markers(content, marker);
+  var html = remark.convert(markerized_content);
+  var container = document.createElement('div');
+  var max_step = 0;
+
+  container.innerHTML = html;
+
+  function walk(node, current_step)
+  {
+    var child = node.firstChild;
+    var step = current_step;
+
+    while (child) {
+      var next = child.nextSibling;
+
+      if (child.nodeType === 8 && child.nodeValue && child.nodeValue.trim() === marker) {
+        step += 1;
+        if (step > max_step) {
+          max_step = step;
+        }
+        node.removeChild(child);
+      } else {
+        if (child.nodeType === 1) {
+          child.classList.add('callout-fragment');
+          child.setAttribute('data-step', String(step));
+          if (step === 0) {
+            child.classList.add('is-visible');
+            child.removeAttribute('hidden');
+          } else {
+            child.setAttribute('hidden', 'hidden');
+          }
+          step = walk(child, step);
+        }
+      }
+
+      child = next;
+    }
+
+    return step;
+  }
+
+  walk(container, 0);
+
+  return {
+    html: container.innerHTML,
+    has_steps: max_step > 0
+  };
 }
 
 // Load file and read content
@@ -137,6 +284,20 @@ function register_macros()
     // Usage: ![:scale 50%](/xxx/image)
     var url = this;
     return '<img src="' + url + '" style="width: ' + percentage + '" />';
+  };
+
+  remark.macros.olstart = function (start) {
+    // Usage: ![:olstart 7](1. item a\n2. item b)
+    var parsed_start = parseInt(start, 10);
+    var list_start = isNaN(parsed_start) || parsed_start < 1 ? 1 : parsed_start;
+    var content = unescape_inside_macro(this);
+
+    var html = remark.convert(content);
+    // Only add start attribute if there is an ordered list and it should only change the first one if there are multiple lists (nested or separate)
+    if (/<ol(?:\s[^>]*)?>/.test(html) && !/<ol[^>]*\sstart=/.test(html)) {
+      html = html.replace(/<ol(\s[^>]*)?>/, '<ol$1 start="' + list_start + '">');
+    }
+    return html;
   };
 
   remark.macros.callout = function () {
@@ -178,52 +339,20 @@ function register_macros()
     }
 
     // Convert escaped brackets back to normal brackets `(` and `)` for markdown parsing
-    var content = this.replace(/&#lpar;/g, '(').replace(/&#rpar;/g, ')').replace(/&#lspar;/g, '[').replace(/&#rspar;/g, ']').replace(/&#lcpar;/g, '{').replace(/&#rcpar;/g, '}');
+    var content = unescape_inside_macro(this);
 
-    var step_blocks = content.split(/\n\s*--\s*\n/g);
     var callout_content_html = '';
+    var has_steps = false;
 
-    if (step_blocks.length > 1) {
-      var next_ordered_start = null;
-
-      for (var s = 0; s < step_blocks.length; s++) {
-        var block = step_blocks[s].trim();
-        if (!block) {
-          continue;
-        }
-
-        // Ensure correct numbering for ordered lists in each step block
-        var block_html = remark.convert(block);
-        var explicit_order_match = block.match(/^\s*(\d+)\.\s+/);
-        var desired_start = null;
-
-        if (explicit_order_match && parseInt(explicit_order_match[1], 10) > 1) {
-          desired_start = parseInt(explicit_order_match[1], 10);
-        } else if (next_ordered_start && next_ordered_start > 1) {
-          desired_start = next_ordered_start;
-        }
-
-        if (desired_start && /<ol(?:\s[^>]*)?>/.test(block_html) && !/<ol[^>]*\sstart=/.test(block_html)) {
-          block_html = block_html.replace(/<ol(\s[^>]*)?>/, '<ol$1 start="' + desired_start + '">');
-        }
-
-        var first_ol_match = block_html.match(/<ol[^>]*>([\s\S]*?)<\/ol>/);
-        if (first_ol_match) {
-          var start_attr_match = block_html.match(/<ol[^>]*\sstart="(\d+)"/);
-          var base_start = start_attr_match ? parseInt(start_attr_match[1], 10) : 1;
-          var item_count = (first_ol_match[1].match(/<li\b/g) || []).length;
-          next_ordered_start = base_start + item_count;
-        } else {
-          next_ordered_start = null;
-        }
-
-        callout_content_html += '<div class="callout-step' + (callout_content_html === '' ? ' is-visible' : '') + '">' + block_html + '</div>';
-      }
+    if (/^\s*--\s*$/m.test(content)) {
+      var rendered_steps = render_callout_with_steps(content);
+      callout_content_html = rendered_steps.html;
+      has_steps = rendered_steps.has_steps;
     } else {
       callout_content_html = remark.convert(content);
     }
 
-    return '<div class="callout callout-' + type + (step_blocks.length > 1 ? ' has-steps' : '') + '">' 
+    return '<div class="callout callout-' + type + (has_steps ? ' has-steps' : '') + '">' 
          +   '<div class="callout-title" dir="auto">'
          +     '<div class="callout-icon">' + icon_svg + '</div>'
          +     '<div class="callout-title-inner">' + title + '</div>'
@@ -237,14 +366,14 @@ function register_macros()
   remark.macros.toc = function () {
     // Usage: ![:toc num1, num2, ...](lines of toc content in markdown)
     // The content lines should start with *, -, +, >, or numbered list like 1., 2., etc.
-    // To add link to a TOC item, use the format: 【text】（link）
+    // To add link to a TOC item, use the format: [text]&#lpar;#link$#rpar; where `#link` is the target slide's name or id, and `text` is the display text for this TOC item.
     //
     // Example:
     // ![:toc 2,4](
-    // * 【Introduction】（#intro）
-    // * 【Usage】（#usage）
-    // * 【Examples】（#examples）
-    // * 【Conclusion】（#conclusion）
+    // * [Introduction]&#lpar;#intro$#rpar;
+    // * [Usage]&#lpar;#usage$#rpar;
+    // * [Examples]&#lpar;#examples$#rpar;
+    // * [Conclusion]&#lpar;#conclusion$#rpar;
     // )
     // 
     // Note: We cannot support standard markdown link format [text](link) here due to parsing issues.
@@ -262,7 +391,7 @@ function register_macros()
         num++;
         var text = match[2];
         // Convert escaped brackets back to normal brackets `(` and `)` for markdown parsing
-        text = text.replace(/&#lpar;/g, '(').replace(/&#rpar;/g, ')').replace(/&#lspar;/g, '[').replace(/&#rspar;/g, ']');
+        text = unescape_inside_macro(text);
         toc_items.push({
           number: num,
           text: remark.convert(text),

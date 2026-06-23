@@ -25,7 +25,7 @@ class: center
 .huge[张王优]
 
 .cute.orange[2026 年 1 月 28 日]<br/>
-.small[.cute.gray[更新于 2026 年 5 月 21 日]]
+.small[.cute.gray[更新于 2026 年 6 月 8 日]]
 
 
 ---
@@ -53,6 +53,7 @@ name: toc
   5. [作图与制表]&#lpar;#figure-chart-table&#rpar;
   6. [数学公式]&#lpar;#equations&#rpar;
   7. [关于 PDF]&#lpar;#pdf&#rpar;
+  8. [常见写作误区]&#lpar;#pitfalls&#rpar;
 )
 
 ---
@@ -768,6 +769,22 @@ name: figure-chart-table
     + 通过自然语言指令和 AI 辅助绘制和修改 draw.io 图表
 4. https://www.mathcha.io
     + 在线数学公式、图表编辑器（Notebook）
+5. ChatGPT：https://chatgpt.com/
+
+---
+
+# AI 作图技巧
+
++ 局部修改 AI 生成的图片中的文字
+    + 可以要求 AI 生成一张删去文字的图片（如图层），然后在 PowerPoint 等软件中添加正确的文字
++ 让 AI 仿照给定的图片风格生成新的图片
+
+![:callout quote, 提示词示例](
++ 截图中是我参考的示意图模板，你可以感受下它的风格，接下来我也要作一张图。
+<br/>我希望生成一张关于 xxx 的示意图，规划的三个技术亮点是 1、xxx 2、xxx 3、xxx。
+<br/>你先想一下音视频omni理解怎么写，把构思文字内容先发给我。
++ 画一下这段文字对应的示意图给我看看。
+)
 
 ---
 
@@ -900,6 +917,37 @@ name: pdf
       ```bash
       exiftool -all= -overwrite_original yourfile.pdf
       ```
+
+---
+
+layout: true
+<div class="my-header" style="background-color: #173D6E;">
+  <img draggable="false" (dragstart)="false;" class="unselectable" src="/images/remark.js/logo_sjtu.svg"/>
+  <span style="color: #FFC000;"><b>常见写作误区</b></span>
+</div>
+<div class="my-watermark" style="z-index: -1;"> </div>
+<div class="my-footer">
+  <span style="width: 20%; background-color: #3172C9; text-align: center; left: 0px;">张王优</span><!--
+  --><span style="width: 60%; background-color: #D47838; text-align: center; left: 20%;">学术论文写作规范与技巧</span><!--
+  --><span style="width: 19%; background-color: #3172C9; text-align: left; padding-left: 1%; left: 80%;">SJTU AudioCC
+</div>
+
+---
+name: pitfalls
+
+#
+
+![:callout danger, 缺少对必要技术背景的介绍](
+  <br/>
+  **某次被拒投稿的 Meta-Reviewer 审稿意见**
+  > The main problem of the paper is writing. .red[It's not clear what is done and why.] The paper is heavily based on XXXXX method [1] and makes the .red[false assumption] that readers would know it before reading the paper. Figure 2 is useful, but .red[all the details], such as the input the model, the GAN loss, and the reconstruction loss .red[are all missing in the main text]. This makes the reviewers .red[hard to judge the scientific merit] of the work. Another example is the use of "alignment". The word "alignment" is overloaded in the field, and it needs to be carefully defined so as not to confuse the readers.
+)
+
+--
+
+**如何避免？**
+1. 写作时站在读者的角度思考
+2. 找其他同学互相帮忙审阅
 
 ---
 

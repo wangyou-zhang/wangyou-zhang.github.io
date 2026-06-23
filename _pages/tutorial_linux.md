@@ -1773,6 +1773,14 @@ name: vscode
     + 支持添加生词到自定义字典
 
 ---
+
+# 关于深色模式
+
++ 「linux.do」[散光一定不要用深色模式](https://linux.do/t/topic/2450455)
++ 「v2ex」[以后不用暗黑模式（Dark Mode）了，因为更伤眼睛](https://www.v2ex.com/t/703380)
++ 「v2ex」[经常用 IDE 黑色主题会加重近视吗](https://www.v2ex.com/t/1058263)
+
+---
 layout: true
 <div class="my-header" style="background-color: #173D6E;">
   <img draggable="false" (dragstart)="false;" class="unselectable" src="/images/remark.js/logo_sjtu.svg"/>
