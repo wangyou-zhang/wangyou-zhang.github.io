@@ -16,9 +16,17 @@
     button {
       -webkit-user-select: none;
       -moz-user-select: none;
+      -ms-user-select: none;
       user-select: none;
       -webkit-touch-callout: none;
+      -webkit-user-drag: none;
       touch-action: manipulation;
+      -ms-touch-action: manipulation;
+    }
+
+    html,
+    body {
+      overscroll-behavior: none;
     }
 
     :root {
@@ -624,6 +632,12 @@
 
       const binaryOps = new Set(['+', '-', '*', '/', '%']);
 
+      function consumeTapEvent(e) {
+        if (!e) return;
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
       function refreshVoices() {
         if (!('speechSynthesis' in window)) return;
         availableVoices = window.speechSynthesis.getVoices();
@@ -750,7 +764,7 @@
 
       function spokenKey(btn) {
         if (btn.dataset.paren) {
-          return btn.dataset.paren === '(' ? '左扩号' : '右扩号';
+          return btn.dataset.paren === '(' ? '左括号' : '右括号';
         }
         if (btn.dataset.value) {
           if (btn.dataset.value === '.') return '点';
@@ -1161,6 +1175,7 @@ function inputOperator(op) {
       keypad.addEventListener('click', (e) => {
         const btn = e.target.closest('button');
         if (!btn) return;
+        consumeTapEvent(e);
         if (btn.dataset.action === 'equals') {
           calculate({ announceResult: true });
           return;
@@ -1175,7 +1190,8 @@ function inputOperator(op) {
         else if (btn.dataset.action === 'toggleSign') toggleSign();
       });
 
-      document.getElementById('muteBtn').addEventListener('click', () => {
+      document.getElementById('muteBtn').addEventListener('click', (e) => {
+        consumeTapEvent(e);
         soundEnabled = !soundEnabled;
         document.getElementById('muteBtn').textContent = soundEnabled ? '音量' : '静音';
       });
@@ -1202,13 +1218,17 @@ function inputOperator(op) {
       }
 
       document.querySelectorAll('[data-paren]').forEach((btn) => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+          consumeTapEvent(e);
           announceButton(btn);
           inputParen(btn.dataset.paren);
         });
       });
 
-      document.getElementById('replayBtn').addEventListener('click', speakReplayResult);
+      document.getElementById('replayBtn').addEventListener('click', (e) => {
+        consumeTapEvent(e);
+        speakReplayResult();
+      });
 
       document.addEventListener('keydown', (e) => {
         const k = e.key;
@@ -1246,14 +1266,12 @@ function inputOperator(op) {
         if (e.target.closest('.calculator')) e.preventDefault();
       });
 
-      let lastTouchEnd = 0;
-      document.addEventListener('touchend', (e) => {
-        const now = Date.now();
-        if (now - lastTouchEnd <= 300) {
-          e.preventDefault();
-        }
-        lastTouchEnd = now;
-      }, { passive: false });
+      // Keep rapid taps responsive: do not block touchend/double-tap sequences.
+      // Instead, each handled button click prevents default behavior and stops
+      // propagation after the click is generated, so repeated taps still work.
+      document.querySelector('.calculator').addEventListener('click', (e) => {
+        if (e.target.closest('button')) consumeTapEvent(e);
+      });
 
       show();
     })();
