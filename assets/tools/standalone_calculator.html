@@ -1,0 +1,1227 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Standalone Calculator</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --panel: #f4efdf;
+      --panel-warm: #e6ddc6;
+      --panel-deep: #c6bca3;
+      --cap-dark: #2d2f31;
+      --cap-deeper: #121314;
+      --bezel: #f2f2ef;
+      --lcd: #cfd6cb;
+      --lcd-deep: #aab4a3;
+      --text-dark: #141414;
+      --graphite-top: #707576;
+      --graphite-mid: #4b4f50;
+      --graphite-bottom: #222526;
+      --key-light-top: #f8f8f7;
+      --key-light-mid: #e8e8e6;
+      --key-light-bottom: #c9c9c6;
+      --red-top: #ff3e3e;
+      --red-mid: #cb0815;
+      --red-bottom: #7d0008;
+      --yellow-top: #ffe96d;
+      --yellow-mid: #ffb51f;
+      --yellow-bottom: #a54d00;
+      --shadow: rgba(0, 0, 0, 0.55);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 24%, #3d3d3d 0%, #1d1d1d 38%, #090909 82%),
+        linear-gradient(180deg, #191919, #060606);
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      color: var(--text-dark);
+      padding: 28px;
+    }
+
+    .calculator {
+      position: relative;
+      width: min(92vw, 450px);
+      padding: 18px 18px 22px;
+      border-radius: 34px 34px 28px 28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0) 8%),
+        linear-gradient(180deg, #3a3b3d 0%, #1d1e1f 35.5%, transparent 35.5%),
+        linear-gradient(180deg, #fbf8ef 0%, var(--panel) 52%, #e7dfc9 100%);
+      border: 4px solid #0d0e0f;
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,.18),
+        inset 0 -10px 16px rgba(0,0,0,.16),
+        inset 0 0 0 2px rgba(255,255,255,.06),
+        0 18px 26px rgba(0,0,0,.35),
+        0 35px 60px rgba(0,0,0,.52);
+      overflow: hidden;
+    }
+
+    .calculator::before {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 28px 28px 22px 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 18% 24%, rgba(255,255,255,.18) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 78% 72%, rgba(0,0,0,.10) 0 1px, transparent 2px),
+        repeating-linear-gradient(112deg, rgba(255,255,255,.035) 0 1px, transparent 1px 7px),
+        repeating-linear-gradient(28deg, rgba(0,0,0,.035) 0 1px, transparent 1px 9px);
+      opacity: .42;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+
+    .screen-wrap,
+    .top-row,
+    .keypad,
+    .screw {
+      position: relative;
+      z-index: 3;
+    }
+
+    .calculator::after {
+      content: "";
+      position: absolute;
+      left: 9%;
+      right: 9%;
+      bottom: -18px;
+      height: 30px;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,.48) 0%, rgba(0,0,0,.08) 62%, transparent 75%);
+      filter: blur(8px);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .screw {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #d8d8d8 0%, #8b8b8b 48%, #494949 100%);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,.35), 0 1px 2px rgba(0,0,0,.35);
+      pointer-events: none;
+    }
+    .screw::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      top: 5px;
+      height: 2px;
+      background: rgba(45,45,45,.75);
+      border-radius: 999px;
+    }
+    .screw.tl { top: 12px; left: 12px; }
+    .screw.tr { top: 12px; right: 12px; }
+    .screw.bl { bottom: 12px; left: 12px; }
+    .screw.br { bottom: 12px; right: 12px; }
+
+    .screen-wrap {
+      position: relative;
+      padding: 28px 24px 24px;
+      border-radius: 22px 22px 12px 12px;
+      background:
+        radial-gradient(circle at 18% 15%, rgba(255,255,255,.08) 0 1px, transparent 1.8px),
+        repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 1px, transparent 1px 8px),
+        repeating-linear-gradient(45deg, rgba(0,0,0,.10) 0 1px, transparent 1px 10px),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0) 30%),
+        linear-gradient(180deg, #3c3e40 0%, var(--cap-dark) 32%, var(--cap-deeper) 100%);
+      border: 3px solid #0d0e0f;
+      box-shadow:
+        inset 0 8px 12px rgba(255,255,255,.06),
+        inset 0 -10px 16px rgba(0,0,0,.44);
+    }
+
+    .screen-wrap::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -3px;
+      height: 8px;
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.45));
+    }
+
+    .screen {
+      position: relative;
+      height: 102px;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) 24px;
+      row-gap: 6px;
+      padding: 10px 14px 10px;
+      border-radius: 9px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,0) 25%),
+        linear-gradient(180deg, #dde4d9 0%, var(--lcd) 42%, var(--lcd-deep) 100%);
+      border: 6px solid var(--bezel);
+      box-shadow:
+        inset 0 3px 10px rgba(0,0,0,.24),
+        inset 0 -1px 0 rgba(255,255,255,.28),
+        0 2px 0 rgba(255,255,255,.14);
+    }
+
+    .screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(100deg, rgba(255,255,255,.18) 0%, rgba(255,255,255,.05) 26%, transparent 34%, transparent 70%, rgba(255,255,255,.09) 100%),
+        repeating-linear-gradient(180deg, rgba(40,50,40,.03) 0 1px, transparent 1px 4px);
+      pointer-events: none;
+    }
+
+    .display-line {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      white-space: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      text-align: right;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: #141414;
+      text-shadow: 0 1px 0 rgba(255,255,255,.18);
+    }
+
+    .display-line::-webkit-scrollbar {
+      display: none;
+    }
+
+    .display-line.is-overflow {
+      cursor: ew-resize;
+    }
+
+    .expression-line {
+      align-self: end;
+      font-size: clamp(28px, 7.2vw, 45px);
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -2.5px;
+      transform: scaleY(1.16);
+      transform-origin: right bottom;
+    }
+
+    .result-line {
+      align-self: end;
+      min-height: 20px;
+      font-size: clamp(13px, 3.8vw, 18px);
+      font-weight: 700;
+      color: rgba(18,18,18,.76);
+      letter-spacing: -.2px;
+    }
+
+    .top-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      align-items: end;
+      padding: 18px 18px 22px;
+    }
+
+    .top-row > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      min-width: 0;
+    }
+
+    .sound-marks {
+      position: relative;
+      width: 80px;
+      height: 22px;
+      margin-left: 0;
+      margin-bottom: 4px;
+      filter: drop-shadow(0 1px 0 rgba(255,255,255,.25));
+    }
+
+    .sound-marks span {
+      position: absolute;
+      height: 4px;
+      border-radius: 999px;
+      background: #111;
+      box-shadow: 0 1px 0 rgba(255,255,255,.1);
+    }
+    .sound-marks span:nth-child(1) { width: 13px; left: 6px; top: 3px; }
+    .sound-marks span:nth-child(2) { width: 24px; left: 21px; top: 2px; }
+    .sound-marks span:nth-child(3) { width: 9px; left: 30px; top: 13px; }
+    .sound-marks span:nth-child(4) { width: 17px; left: 45px; top: 12px; }
+
+    button {
+      border: 0;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .aux {
+      position: relative;
+      width: 78px;
+      height: 38px;
+      justify-self: center;
+      border-radius: 999px;
+      border: 3px solid #362200;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255,255,255,.55) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 74% 76%, rgba(130,52,0,.18) 0 1px, transparent 1.8px),
+        repeating-linear-gradient(100deg, rgba(255,255,255,.11) 0 1px, transparent 1px 6px),
+        repeating-linear-gradient(10deg, rgba(0,0,0,.045) 0 1px, transparent 1px 7px),
+        linear-gradient(180deg, rgba(255,255,255,.30), rgba(255,255,255,0) 30%),
+        radial-gradient(circle at 45% 28%, #fff4ac 0 10%, rgba(255,244,172,.9) 11%, transparent 20%),
+        linear-gradient(180deg, var(--yellow-top) 0%, var(--yellow-mid) 54%, var(--yellow-bottom) 100%);
+      color: #823400;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      box-shadow:
+        inset 0 2px 5px rgba(255,255,255,.5),
+        inset 0 -6px 8px rgba(0,0,0,.28),
+        0 3px 0 #140d00,
+        0 6px 10px rgba(0,0,0,.18);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .aux.right { justify-self: center; align-self: end; margin-right: 0; }
+
+    .aux:active {
+      transform: translateY(2px);
+      box-shadow:
+        inset 0 2px 5px rgba(255,255,255,.42),
+        inset 0 -4px 6px rgba(0,0,0,.24),
+        0 1px 0 #140d00,
+        0 3px 6px rgba(0,0,0,.18);
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 11px;
+      padding: 0 2px 2px;
+    }
+
+    .key {
+      position: relative;
+      min-height: 58px;
+      border-radius: 9px;
+      border: 3px solid #2a2c2e;
+      font-size: 30px;
+      font-weight: 900;
+      cursor: pointer;
+      user-select: none;
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,.34),
+        inset 0 -6px 10px rgba(0,0,0,.18),
+        0 4px 0 #111214,
+        0 8px 10px rgba(0,0,0,.18);
+      transition: transform .04s ease, box-shadow .04s ease, filter .12s ease;
+    }
+
+    .key::before {
+      content: "";
+      position: absolute;
+      left: 9%;
+      right: 9%;
+      top: 6px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0));
+      pointer-events: none;
+      opacity: .72;
+    }
+
+    .key::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 6px;
+      border: 1px dashed rgba(255,255,255,.16);
+      pointer-events: none;
+    }
+
+    .key:active,
+    .key.active {
+      transform: translateY(3px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.25),
+        inset 0 -3px 7px rgba(0,0,0,.16),
+        0 1px 0 #111214,
+        0 3px 5px rgba(0,0,0,.16);
+      filter: brightness(.98);
+    }
+
+    .key.num {
+      background:
+        radial-gradient(circle at 22% 24%, rgba(255,255,255,.78) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 72% 78%, rgba(0,0,0,.08) 0 1px, transparent 2px),
+        repeating-linear-gradient(115deg, rgba(255,255,255,.16) 0 1px, transparent 1px 7px),
+        repeating-linear-gradient(25deg, rgba(0,0,0,.035) 0 1px, transparent 1px 8px),
+        linear-gradient(180deg, var(--key-light-top) 0%, var(--key-light-mid) 55%, var(--key-light-bottom) 100%);
+      color: #0f0f10;
+      border-color: #6c6d70;
+    }
+
+    .key.op,
+    .key.fn {
+      background:
+        radial-gradient(circle at 20% 22%, rgba(255,255,255,.28) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 76% 78%, rgba(0,0,0,.25) 0 1px, transparent 2px),
+        repeating-linear-gradient(110deg, rgba(255,255,255,.055) 0 1px, transparent 1px 7px),
+        repeating-linear-gradient(20deg, rgba(0,0,0,.12) 0 1px, transparent 1px 8px),
+        linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,0) 22%),
+        linear-gradient(180deg, var(--graphite-top) 0%, var(--graphite-mid) 54%, var(--graphite-bottom) 100%);
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0,0,0,.55);
+    }
+
+    .key.clear {
+      background:
+        radial-gradient(circle at 20% 22%, rgba(255,255,255,.38) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 76% 78%, rgba(95,0,8,.26) 0 1px, transparent 2px),
+        repeating-linear-gradient(115deg, rgba(255,255,255,.075) 0 1px, transparent 1px 7px),
+        repeating-linear-gradient(25deg, rgba(0,0,0,.10) 0 1px, transparent 1px 8px),
+        linear-gradient(180deg, rgba(255,255,255,.17), rgba(255,255,255,0) 24%),
+        linear-gradient(180deg, var(--red-top) 0%, var(--red-mid) 54%, var(--red-bottom) 100%);
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0,0,0,.55);
+      border-color: #5d0a0f;
+    }
+
+    .key.plus {
+      grid-column: 5;
+      grid-row: 3 / span 2;
+      min-height: 127px;
+      font-size: 44px;
+    }
+
+    .small-label {
+      font-size: 24px;
+      letter-spacing: -.4px;
+    }
+
+
+    .aux::before,
+    .key::before {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.76) 0%, rgba(255,255,255,.28) 46%, rgba(255,255,255,0) 100%),
+        radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.82) 0%, rgba(255,255,255,.18) 62%, transparent 72%);
+      opacity: .86;
+      mix-blend-mode: screen;
+    }
+
+    .aux::after,
+    .key::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border-radius: inherit;
+      inset: 4px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.08) 28%, transparent 45%),
+        linear-gradient(315deg, rgba(255,255,255,.14), transparent 40%),
+        radial-gradient(circle at 74% 86%, rgba(255,255,255,.18), transparent 38%);
+      border: 1px solid rgba(255,255,255,.28);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.42),
+        inset 0 -1px 2px rgba(0,0,0,.16);
+    }
+
+    .key {
+      backdrop-filter: blur(1.2px);
+      -webkit-backdrop-filter: blur(1.2px);
+    }
+
+    .key.num {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.58), rgba(255,255,255,.12) 32%, rgba(255,255,255,0) 72%),
+        radial-gradient(ellipse at 48% 0%, rgba(255,255,255,.75), transparent 58%),
+        linear-gradient(180deg, var(--key-light-top) 0%, var(--key-light-mid) 55%, var(--key-light-bottom) 100%);
+    }
+
+    .key.op,
+    .key.fn {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,.11) 28%, rgba(255,255,255,0) 76%),
+        radial-gradient(ellipse at 48% 0%, rgba(255,255,255,.36), transparent 60%),
+        linear-gradient(180deg, var(--graphite-top) 0%, var(--graphite-mid) 54%, var(--graphite-bottom) 100%);
+    }
+
+    .key.clear {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.48), rgba(255,255,255,.12) 30%, rgba(255,255,255,0) 78%),
+        radial-gradient(ellipse at 48% 0%, rgba(255,255,255,.36), transparent 60%),
+        linear-gradient(180deg, var(--red-top) 0%, var(--red-mid) 54%, var(--red-bottom) 100%);
+    }
+
+    .aux {
+      overflow: hidden;
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
+    }
+
+    .aux::before {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      top: 4px;
+      height: 14px;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .aux::after {
+      inset: 3px;
+      border-radius: 999px;
+    }
+
+    .aux {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.50), rgba(255,255,255,.14) 32%, rgba(255,255,255,0) 72%),
+        radial-gradient(circle at 45% 28%, #fff4ac 0 10%, rgba(255,244,172,.9) 11%, transparent 20%),
+        linear-gradient(180deg, var(--yellow-top) 0%, var(--yellow-mid) 54%, var(--yellow-bottom) 100%);
+    }
+
+
+    .aux.paren-btn {
+      border-color: #2a2c2e;
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0,0,0,.55);
+      background:
+        radial-gradient(circle at 20% 22%, rgba(255,255,255,.28) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 76% 78%, rgba(0,0,0,.25) 0 1px, transparent 2px),
+        repeating-linear-gradient(110deg, rgba(255,255,255,.055) 0 1px, transparent 1px 7px),
+        repeating-linear-gradient(20deg, rgba(0,0,0,.12) 0 1px, transparent 1px 8px),
+        linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,.11) 28%, rgba(255,255,255,0) 76%),
+        radial-gradient(ellipse at 48% 0%, rgba(255,255,255,.36), transparent 60%),
+        linear-gradient(180deg, var(--graphite-top) 0%, var(--graphite-mid) 54%, var(--graphite-bottom) 100%);
+      box-shadow:
+        inset 0 2px 5px rgba(255,255,255,.28),
+        inset 0 -6px 8px rgba(0,0,0,.32),
+        0 3px 0 #111214,
+        0 6px 10px rgba(0,0,0,.18);
+    }
+
+    @media (max-width: 420px) {
+      body { padding: 14px; }
+      .calculator { padding: 14px 14px 18px; border-radius: 26px 26px 22px 22px; }
+      .screen-wrap { padding: 22px 16px 18px; }
+      .screen { height: 92px; }
+      .expression-line { font-size: clamp(25px, 8vw, 36px); }
+      .result-line { font-size: clamp(12px, 4vw, 16px); }
+      .top-row { padding: 16px 8px 18px; gap: 7px; }
+      .keypad { gap: 8px; }
+      .key { min-height: 52px; font-size: 26px; }
+      .key.plus { min-height: 110px; }
+      .aux { width: 66px; height: 36px; font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="calculator" aria-label="Calculator">
+    <span class="screw tl" aria-hidden="true"></span>
+    <span class="screw tr" aria-hidden="true"></span>
+    <span class="screw bl" aria-hidden="true"></span>
+    <span class="screw br" aria-hidden="true"></span>
+
+    <section class="screen-wrap">
+      <div class="screen" aria-live="polite">
+        <div id="exprDisplay" class="display-line expression-line">0</div>
+        <div id="resultDisplay" class="display-line result-line">&nbsp;</div>
+      </div>
+    </section>
+
+    <div class="top-row">
+      <div>
+        <div class="sound-marks" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <button class="aux" id="muteBtn" type="button">音量</button>
+      </div>
+      <div>
+        <button class="aux paren-btn" type="button" data-paren="(" aria-label="左括号">(</button>
+      </div>
+      <div>
+        <button class="aux paren-btn" type="button" data-paren=")" aria-label="右括号">)</button>
+      </div>
+      <div>
+        <button class="aux right" id="replayBtn" type="button">重播</button>
+      </div>
+    </div>
+
+    <section class="keypad" aria-label="Keypad">
+      <button class="key fn" data-action="toggleSign">+/−</button>
+      <button class="key num" data-value="7">7</button>
+      <button class="key num" data-value="8">8</button>
+      <button class="key num" data-value="9">9</button>
+      <button class="key op" data-op="%">%</button>
+      <button class="key fn" data-action="backspace">←</button>
+
+      <button class="key fn small-label" data-action="ans">ANS</button>
+      <button class="key num" data-value="4">4</button>
+      <button class="key num" data-value="5">5</button>
+      <button class="key num" data-value="6">6</button>
+      <button class="key op" data-op="*">×</button>
+      <button class="key op" data-op="/">÷</button>
+
+      <button class="key clear" data-action="ce">CE</button>
+      <button class="key num" data-value="1">1</button>
+      <button class="key num" data-value="2">2</button>
+      <button class="key num" data-value="3">3</button>
+      <button class="key op plus" data-op="+">+</button>
+      <button class="key op" data-op="-">−</button>
+
+      <button class="key clear" data-action="ac">AC</button>
+      <button class="key num" data-value="0">0</button>
+      <button class="key num" data-value="00">00</button>
+      <button class="key num" data-value=".">•</button>
+      <button class="key op" data-action="equals">=</button>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const exprDisplay = document.getElementById('exprDisplay');
+      const resultDisplay = document.getElementById('resultDisplay');
+      const keypad = document.querySelector('.keypad');
+      const keys = document.querySelectorAll('.key');
+
+      let expression = '';
+      let resultText = '';
+      let lastAnswer = 0;
+      let lastAnswerText = '0';
+      let lastExpression = '';
+      let justEvaluated = false;
+      let soundEnabled = true;
+      let availableVoices = [];
+
+      const binaryOps = new Set(['+', '-', '*', '/', '%']);
+
+      function refreshVoices() {
+        if (!('speechSynthesis' in window)) return;
+        availableVoices = window.speechSynthesis.getVoices();
+      }
+
+      refreshVoices();
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = refreshVoices;
+      }
+
+      function getChineseVoice() {
+        refreshVoices();
+        const voices = availableVoices || [];
+        const zhVoices = voices.filter(v => /zh|cmn|yue/i.test(v.lang) || /Chinese|中文|普通话|國語|国语/i.test(v.name));
+        const femaleHints = /xiaoxiao|xiaoyi|xiaobei|xiaoni|huihui|yaoyao|tingting|meijia|mei-jia|sin-ji|hanhan|wanlung|wan-lung|female|女/i;
+        return zhVoices.find(v => femaleHints.test(v.name)) || zhVoices[0] || voices.find(v => /female|女/i.test(v.name)) || null;
+      }
+
+      function beep({ force = false } = {}) {
+        if ((!soundEnabled && !force) || !(window.AudioContext || window.webkitAudioContext)) return;
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          const ctx = new AudioCtx();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.value = 620;
+          gain.gain.value = 0.035;
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.045);
+          osc.onended = () => ctx.close();
+        } catch (_) {}
+      }
+
+      function speakText(text, { force = false } = {}) {
+        if ((!soundEnabled && !force) || !text) return;
+        if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) {
+          beep({ force });
+          return;
+        }
+
+        try {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'zh-CN';
+          utterance.rate = 0.95;
+          utterance.pitch = 1.08;
+          utterance.volume = 1;
+          const voice = getChineseVoice();
+          if (voice) utterance.voice = voice;
+          window.speechSynthesis.speak(utterance);
+        } catch (_) {
+          beep({ force });
+        }
+      }
+
+      function fractionalDigitsToSpeech(digits) {
+        const digitSpeech = {
+          '0': '零',
+          '1': '一',
+          '2': '二',
+          '3': '三',
+          '4': '四',
+          '5': '五',
+          '6': '六',
+          '7': '七',
+          '8': '八',
+          '9': '九'
+        };
+        return String(digits).split('').map(d => digitSpeech[d] || d).join('');
+      }
+
+      function speakableNumberToken(token) {
+        let src = String(token).replace(/−/g, '-');
+        let signText = '';
+
+        if (src.startsWith('-')) {
+          signText = '负';
+          src = src.slice(1);
+        } else if (src.startsWith('+')) {
+          src = src.slice(1);
+        }
+
+        let exponentText = '';
+        const exponentMatch = src.match(/e([+-]?\d+)$/i);
+        if (exponentMatch) {
+          src = src.slice(0, exponentMatch.index);
+          let exponent = exponentMatch[1];
+          let exponentSign = '';
+          if (exponent.startsWith('-')) {
+            exponentSign = '负';
+            exponent = exponent.slice(1);
+          } else if (exponent.startsWith('+')) {
+            exponent = exponent.slice(1);
+          }
+          exponentText = `乘以十的${exponentSign}${exponent}次`;
+        }
+
+        if (src.includes('.')) {
+          const [integerPartRaw, fractionalPartRaw = ''] = src.split('.');
+          const integerPart = integerPartRaw || '0';
+          const fractionalPart = fractionalDigitsToSpeech(fractionalPartRaw);
+          return `${signText}${integerPart}点${fractionalPart}${exponentText}`;
+        }
+
+        return `${signText}${src}${exponentText}`;
+      }
+
+      function resultSpeechText(text) {
+        return String(text)
+          .replace(/^=\s*/, '')
+          .replace(/−/g, '-')
+          .replace(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/gi, speakableNumberToken)
+          .replace(/\+/g, '加')
+          .replace(/-/g, '负')
+          .replace(/\*/g, '乘以')
+          .replace(/×/g, '乘以')
+          .replace(/\//g, '除以')
+          .replace(/÷/g, '除以')
+          .replace(/%/g, '模');
+      }
+
+      function spokenKey(btn) {
+        if (btn.dataset.paren) {
+          return btn.dataset.paren === '(' ? '左扩号' : '右扩号';
+        }
+        if (btn.dataset.value) {
+          if (btn.dataset.value === '.') return '点';
+          if (btn.dataset.value === '00') return '零零';
+          return btn.dataset.value;
+        }
+        if (btn.dataset.op) {
+          return {
+            '+': '加',
+            '-': '减',
+            '*': '乘以',
+            '/': '除以',
+            '%': '模'
+          }[btn.dataset.op] || '';
+        }
+        return {
+          equals: '等于',
+          ce: '清除',
+          ac: '归零',
+          backspace: '删除',
+          toggleSign: '取反',
+          ans: ''
+        }[btn.dataset.action] || '';
+      }
+
+      function announceButton(btn) {
+        if (!btn) return;
+        if (btn.dataset.action === 'equals') return;
+        if (btn.dataset.action === 'ans') {
+          beep();
+          return;
+        }
+        speakText(spokenKey(btn));
+      }
+
+      function pretty(text) {
+        return String(text)
+          .replace(/\*/g, '×')
+          .replace(/\//g, '÷')
+          .replace(/-/g, '−');
+      }
+
+      function clampValue(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function fitLine(el, maxSize, minSize, maxLetterSpacing, minLetterSpacing) {
+        const rawText = el.textContent.trim();
+        el.title = rawText && rawText !== '\u00a0' ? rawText : '';
+
+        el.classList.remove('is-overflow');
+        el.style.fontSize = `${maxSize}px`;
+        el.style.letterSpacing = `${maxLetterSpacing}px`;
+
+        let size = maxSize;
+        const maxSteps = Math.max(1, Math.round(maxSize - minSize));
+        let steps = 0;
+
+        while (el.scrollWidth > el.clientWidth && size > minSize && steps < maxSteps + 2) {
+          size -= 1;
+          steps += 1;
+          const t = clampValue((maxSize - size) / Math.max(1, maxSize - minSize), 0, 1);
+          const spacing = maxLetterSpacing + (minLetterSpacing - maxLetterSpacing) * t;
+          el.style.fontSize = `${size}px`;
+          el.style.letterSpacing = `${spacing}px`;
+        }
+
+        if (el.scrollWidth > el.clientWidth) {
+          el.classList.add('is-overflow');
+        }
+
+        // Always keep the most recently typed part / final result visible.
+        el.scrollLeft = el.scrollWidth;
+      }
+
+      function fitDisplays() {
+        const exprWidth = Math.max(1, exprDisplay.clientWidth);
+        const resultWidth = Math.max(1, resultDisplay.clientWidth);
+
+        const exprMax = clampValue(exprWidth * 0.12, 28, 45);
+        const resultMax = clampValue(resultWidth * 0.048, 13, 18);
+
+        fitLine(exprDisplay, exprMax, 15, -2.5, -0.4);
+        fitLine(resultDisplay, resultMax, 10, -0.2, 0);
+      }
+
+      function show() {
+        exprDisplay.textContent = expression ? pretty(expression) : '0';
+        resultDisplay.textContent = resultText || '\u00a0';
+        requestAnimationFrame(fitDisplays);
+      }
+
+      window.addEventListener('resize', () => requestAnimationFrame(fitDisplays));
+
+      function isUnaryMinusAt(str, index) {
+        return str[index] === '-' && (index === 0 || binaryOps.has(str[index - 1]) || str[index - 1] === '(');
+      }
+
+      function isTrailingBinaryOperator(str) {
+        if (!str) return false;
+        const i = str.length - 1;
+        return binaryOps.has(str[i]) && !isUnaryMinusAt(str, i);
+      }
+
+      function currentOperandRange() {
+        const end = expression.length;
+        if (!end) return [0, 0];
+        for (let i = end - 1; i >= 0; i--) {
+          if (binaryOps.has(expression[i]) && !isUnaryMinusAt(expression, i)) {
+            return [i + 1, end];
+          }
+        }
+        return [0, end];
+      }
+
+      function clearResultLine() {
+        resultText = '';
+      }
+
+      function formatNumber(num) {
+        if (!Number.isFinite(num)) throw new Error('Math error');
+        if (Object.is(num, -0)) num = 0;
+        const rounded = Math.abs(num) >= 1e12 || (Math.abs(num) > 0 && Math.abs(num) < 1e-9)
+          ? Number(num.toPrecision(12))
+          : Number(num.toFixed(12));
+        return String(rounded).replace(/\.0+(e|$)/, '$1').replace(/(\.\d*?)0+(e|$)/, '$1$2');
+      }
+
+      function answerAsExpression(answerText) {
+        return answerText.startsWith('-') ? `(${answerText})` : answerText;
+      }
+
+      function substituteAns(str, answerText) {
+        return str.replace(/ANS/g, answerAsExpression(answerText));
+      }
+
+      function trimForEvaluation(str) {
+        let src = str;
+        while (src && isTrailingBinaryOperator(src)) src = src.slice(0, -1);
+        return src;
+      }
+
+      function inputValue(v) {
+
+        if (justEvaluated) {
+          expression = '';
+          justEvaluated = false;
+        }
+        clearResultLine();
+
+        const [start, end] = currentOperandRange();
+        const current = expression.slice(start, end);
+
+        if (v === '.') {
+          if (current.includes('ANS')) return show();
+          if (!current.includes('.')) expression += current && current !== '-' ? '.' : '0.';
+          return show();
+        }
+
+        if (current === '0' && v !== '00') {
+          expression = expression.slice(0, start) + v + expression.slice(end);
+        } else if (current === '-0' && v !== '00') {
+          expression = expression.slice(0, start) + '-' + v + expression.slice(end);
+        } else if (current === '0' || current === '-0') {
+          // Keep a single leading zero for the current number.
+        } else {
+          expression += v;
+        }
+        show();
+      }
+
+      function insertAnswerToken() {
+
+        if (justEvaluated) {
+          expression = 'ANS';
+          justEvaluated = false;
+        } else {
+          expression += 'ANS';
+        }
+        clearResultLine();
+        show();
+      }
+
+      
+      function inputParen(paren) {
+        if (justEvaluated) {
+          expression = paren === '(' ? '(' : lastAnswerText + ')';
+          justEvaluated = false;
+        } else {
+          expression += paren;
+        }
+        clearResultLine();
+        show();
+      }
+
+function inputOperator(op) {
+
+        clearResultLine();
+
+        if (justEvaluated) {
+          expression = lastAnswerText + op;
+          justEvaluated = false;
+          return show();
+        }
+
+        if (!expression) {
+          if (op === '-') expression = '-';
+          return show();
+        }
+
+        const last = expression.at(-1);
+        if (binaryOps.has(last) && !isUnaryMinusAt(expression, expression.length - 1)) {
+          expression = expression.slice(0, -1) + op;
+        } else {
+          expression += op;
+        }
+        show();
+      }
+
+      function toggleSign() {
+
+        clearResultLine();
+
+        if (justEvaluated) {
+          const flipped = -Number(lastAnswerText);
+          expression = formatNumber(flipped);
+          justEvaluated = false;
+          return show();
+        }
+
+        if (!expression) {
+          expression = '-';
+          return show();
+        }
+
+        const [start, end] = currentOperandRange();
+        const current = expression.slice(start, end);
+        if (!current) return show();
+
+        if (current.startsWith('-')) {
+          expression = expression.slice(0, start) + current.slice(1) + expression.slice(end);
+        } else {
+          expression = expression.slice(0, start) + '-' + current + expression.slice(end);
+        }
+        show();
+      }
+
+      function clearEntry() {
+        const hadSecondLine = Boolean(resultText);
+
+        // CE only clears the first-line expression. If the second line already
+        // had a result/error message, keep the ANS context visible by replacing
+        // it with the current stored answer value.
+        expression = '';
+        if (hadSecondLine) {
+          resultText = `ANS=${pretty(lastAnswerText)}`;
+        }
+        justEvaluated = false;
+        show();
+      }
+
+      function allClear() {
+
+        expression = '';
+        resultText = '';
+        justEvaluated = false;
+        show();
+      }
+
+      function backspace() {
+
+        if (justEvaluated) {
+          expression = '';
+          resultText = '';
+          justEvaluated = false;
+          return show();
+        }
+
+        if (expression.endsWith('ANS')) {
+          expression = expression.slice(0, -3);
+        } else {
+          expression = expression.slice(0, -1);
+        }
+        clearResultLine();
+        show();
+      }
+
+      function Parser(src) {
+        this.src = src.replace(/\s+/g, '');
+        this.i = 0;
+      }
+
+      Parser.prototype.peek = function () {
+        return this.src[this.i];
+      };
+
+      Parser.prototype.consume = function (char) {
+        if (this.src[this.i] === char) {
+          this.i += 1;
+          return true;
+        }
+        return false;
+      };
+
+      Parser.prototype.parse = function () {
+        if (!this.src) throw new Error('Empty expression');
+        const value = this.parseExpression();
+        if (this.i !== this.src.length) throw new Error('Invalid expression');
+        return value;
+      };
+
+      Parser.prototype.parseExpression = function () {
+        let value = this.parseTerm();
+        while (true) {
+          if (this.consume('+')) value += this.parseTerm();
+          else if (this.consume('-')) value -= this.parseTerm();
+          else break;
+        }
+        return value;
+      };
+
+      Parser.prototype.parseTerm = function () {
+        let value = this.parseFactor();
+        while (true) {
+          if (this.consume('*')) value *= this.parseFactor();
+          else if (this.consume('/')) {
+            const divisor = this.parseFactor();
+            if (divisor === 0) throw new Error('Divide by zero');
+            value /= divisor;
+          } else if (this.consume('%')) {
+            const divisor = this.parseFactor();
+            if (divisor === 0) throw new Error('Modulo by zero');
+            value %= divisor;
+          } else break;
+        }
+        return value;
+      };
+
+      Parser.prototype.parseFactor = function () {
+        if (this.consume('+')) return this.parseFactor();
+        if (this.consume('-')) return -this.parseFactor();
+
+        if (this.consume('(')) {
+          const value = this.parseExpression();
+          if (!this.consume(')')) throw new Error('Missing parenthesis');
+          return value;
+        }
+        return this.parseNumber();
+      };
+
+      Parser.prototype.parseNumber = function () {
+        const start = this.i;
+        let dotCount = 0;
+        while (this.i < this.src.length) {
+          const c = this.src[this.i];
+          if (c === '.') {
+            dotCount += 1;
+            if (dotCount > 1) throw new Error('Invalid number');
+            this.i += 1;
+          } else if (/\d/.test(c)) {
+            this.i += 1;
+          } else {
+            break;
+          }
+        }
+        if (start === this.i) throw new Error('Invalid number');
+        const raw = this.src.slice(start, this.i);
+        if (raw === '.') throw new Error('Invalid number');
+        return Number(raw);
+      };
+
+      function evaluateSource(src) {
+        const parser = new Parser(src);
+        return parser.parse();
+      }
+
+      function calculate({ announceResult = false } = {}) {
+
+        try {
+          const visibleExpression = trimForEvaluation(expression);
+          if (!visibleExpression) return;
+
+          const evalSource = substituteAns(visibleExpression, lastAnswerText);
+          const value = evaluateSource(evalSource);
+          const answer = formatNumber(value);
+
+          expression = visibleExpression;
+          resultText = `= ${pretty(answer)}`;
+          lastAnswer = value;
+          lastAnswerText = answer;
+          lastExpression = visibleExpression;
+          justEvaluated = true;
+          show();
+          if (announceResult) speakText(`等于 ${resultSpeechText(answer)}`);
+        } catch (err) {
+          const msg = err.message === 'Divide by zero'
+            ? '错误：不能除以 0'
+            : err.message === 'Modulo by zero'
+              ? '错误：不能对 0 取余'
+              : '错误：表达式无效';
+          resultText = msg;
+          justEvaluated = true;
+          show();
+          if (announceResult) speakText(`等于 ${msg}`);
+        }
+      }
+
+      keypad.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        if (btn.dataset.action === 'equals') {
+          calculate({ announceResult: true });
+          return;
+        }
+        announceButton(btn);
+        if (btn.dataset.value) inputValue(btn.dataset.value);
+        else if (btn.dataset.op) inputOperator(btn.dataset.op);
+        else if (btn.dataset.action === 'ce') clearEntry();
+        else if (btn.dataset.action === 'ac') allClear();
+        else if (btn.dataset.action === 'backspace') backspace();
+        else if (btn.dataset.action === 'ans') insertAnswerToken();
+        else if (btn.dataset.action === 'toggleSign') toggleSign();
+      });
+
+      document.getElementById('muteBtn').addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        document.getElementById('muteBtn').textContent = soundEnabled ? '音量' : '静音';
+      });
+
+      function resultForSpeech() {
+        if (resultText && resultText.startsWith('=')) {
+          return resultText.replace(/^=\s*/, '');
+        }
+
+        try {
+          const visibleExpression = trimForEvaluation(expression);
+          if (!visibleExpression) return '';
+          const evalSource = substituteAns(visibleExpression, lastAnswerText);
+          return formatNumber(evaluateSource(evalSource));
+        } catch (_) {
+          return resultText || '表达式错误';
+        }
+      }
+
+      function speakReplayResult() {
+        const result = resultForSpeech();
+        if (!result) return;
+        speakText(`结果是 ${resultSpeechText(result)}`, { force: true });
+      }
+
+      document.querySelectorAll('[data-paren]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          announceButton(btn);
+          inputParen(btn.dataset.paren);
+        });
+      });
+
+      document.getElementById('replayBtn').addEventListener('click', speakReplayResult);
+
+      document.addEventListener('keydown', (e) => {
+        const k = e.key;
+        let label = k;
+
+        if (/\d/.test(k)) inputValue(k);
+        else if (k === '.') inputValue('.');
+        else if (['+', '-', '*', '/', '%'].includes(k)) inputOperator(k);
+        else if (k === '(' || k === ')') inputParen(k);
+        else if (k === 'Enter' || k === '=') { e.preventDefault(); calculate({ announceResult: true }); label = '='; }
+        else if (k === 'Backspace') { backspace(); label = '←'; }
+        else if (k === 'Escape') { allClear(); label = 'AC'; }
+        else if (k.toLowerCase() === 'a') { insertAnswerToken(); label = 'ANS'; }
+        else return;
+
+        const shown = label === '*' ? '×' : label === '/' ? '÷' : label;
+        const target = [...document.querySelectorAll('.key, .paren-btn')]
+          .find(btn => btn.textContent.trim() === shown || btn.dataset.value === k || btn.dataset.op === k || btn.dataset.paren === k);
+        announceButton(target);
+        if (target) {
+          target.classList.add('active');
+          setTimeout(() => target.classList.remove('active'), 90);
+        }
+      });
+
+      show();
+    })();
+  </script>
+</body>
+</html>
