@@ -308,6 +308,8 @@ name: ethics
 
 )
 
+> Acknowledgment: We would like to thank Dr. xxx from xxxx for the fruitful discussion. The authors used ChatGPT 5.5 and Codex to (1) help generate source codes for the experiments (2) polish the English grammar and word usage of the manuscript. The idea is original, and authors take full responsibility for the contents in the manuscript.
+
 ---
 
 # 规范性
@@ -828,7 +830,7 @@ name: equations
 # 公式中的学术规范
 
 1. 全文（正文/图片/表格/公式）的数学符号应**保持一致**，且在首次出现时明确定义
-2. 公式中新出现的变量符号，应当在公式附近（前文或后文）进行定义
+2. 公式中新出现的变量符号，应当始终在公式附近（前文或后文）进行定义
 3. 公式中的符号应当与相关领域的惯例保持一致，避免使用不常见或自定义的符号，除非有充分理由
     + 比如在语音增强领域，通常使用 `x` 表示混合语音信号，`s` 表示干净语音信号，`n` 表示噪声信号
     + 时域信号通常用小写字母表示，频域信号通常用大写字母表示
@@ -843,6 +845,7 @@ name: equations
 
 # 公式中的学术规范
 
+![:olstart 4](
 4. 推荐格式（续）
     + 公式末尾如需标点符号，建议根据上下文决定采用逗号还是句号
         + 如果公式后面紧跟着一个完整的句子，建议使用逗号，如：
@@ -858,6 +861,28 @@ name: equations
             y = Wx + b.
           \end{equation}
           ```
+)
+
+---
+
+# 公式中的学术规范
+
+![:olstart 5](
+5. 避免使用容易混淆的公式/符号
+    + 例如，使用 `l`（小写字母 L）作为变量名时，容易与数字 `1` 混淆
+    + 使用 `O`（大写字母 O）作为变量名时，容易与数字 `0` 混淆
+    + 使用 `a`（小写字母 A）作为变量名时，容易与希腊字母 `\alpha` 混淆
+    + 使用 `1/2&#lpar;A + B&#rpar;` 形式的公式时，容易在 `\frac{1}{2} &#lpar;A + B&#rpar;` 与 `\frac{1}{2&#lpar;A + B&#rpar;}` 之间混淆
+    + 避免将表示含义的非运算数字作为上标（如 `x^2` 表示第二个样本，容易理解为 x 取平方）
+6. 在距离符号定义较远的正文中再次使用该符号时，最好显式提及该符号定义的位置（如公式编号、章节编号等），以便读者快速查找
+    + 例如：
+
+```tex
+“The prediction order $\Delta$ &#lpar;defined in Equation 3&#rpar; is set to ...”
+
+“The $\operatorname{Pred}$ module &#lpar;introduced in Section 3.2&#rpar; is initialized as ...”
+```
+)
 
 ---
 
@@ -871,6 +896,8 @@ name: equations
 4. 在线工具（开源）：https://texocr.netlify.app/ocr
 5. 在线工具：https://simpletex.cn/ai/latex_ocr
 6. 开源软件（Windows）：https://github.com/RQLuo/MixTeX-Latex-OCR
+7. 开源软件（Windows + macOS + Linux）：https://github.com/SakuraMathcraft/LaTeXSnipper
+8. PowerPoint 插件（Windows + macOS）LaTeX 公式编辑器：https://github.com/Jonathan-LeRoux/IguanaTex
 
 ---
 layout: true
