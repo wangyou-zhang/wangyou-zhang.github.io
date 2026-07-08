@@ -128,10 +128,42 @@ h1 {
 .hover_img a span { position:absolute; display:none; z-index:99; }
 .hover_img a:hover span { display:block; }
 
+/* Hide link styling inside a container */
+.hidelinks a,
+.hidelinks a:visited,
+.hidelinks a:hover,
+.hidelinks a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
 /* Set list and ordered list item spacing */
 .remark-slide-content ul li,
 .remark-slide-content ol li {
   margin-bottom: 0.4em;
+}
+
+.remark-slide-content ul.unicode-bullet,
+.remark-slide-content ol.unicode-bullet {
+  --unicode-bullet-gap: 0.4em;
+  --unicode-bullet-width: 1em;
+  --unicode-bullet-color: inherit;
+  list-style: none;
+}
+
+.remark-slide-content ul.unicode-bullet li,
+.remark-slide-content ol.unicode-bullet li {
+  position: relative;
+}
+
+.remark-slide-content ul.unicode-bullet li::before,
+.remark-slide-content ol.unicode-bullet li::before {
+  content: attr(data-bullet);
+  position: absolute;
+  left: calc(-1 * (var(--unicode-bullet-width) + var(--unicode-bullet-gap)));
+  width: var(--unicode-bullet-width);
+  text-align: center;
+  color: var(--unicode-bullet-color);
 }
 
 
