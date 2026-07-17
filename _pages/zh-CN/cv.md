@@ -50,8 +50,8 @@ This is a byline example.
 
 工作经历
 ======
-* **[2025-至今]** 助理教授
-  * 上海交通大学，人工智能学院
+* **[2025-至今]** 上海交通大学，人工智能学院
+  * 助理教授，博士生导师
 
 研究方向
 ======
@@ -67,19 +67,19 @@ This is a byline example.
 
 > 请访问 [我的 Google Scholar 主页]({{site.author.googlescholar}}) 查看详细论文列表
 
-截至 2025 年 8 月 26 日，我共发表 52 篇高质量期刊和会议论文（其中 18 篇为第一作者论文），包括：
+截至 2026 年 7 月 17 日，我共发表 60 篇高质量期刊和会议论文（其中 19 篇为第一作者论文），包括：
 * TASLP: 2
 * SPM: 1
 * CSL: 1
 * OJSP: 1
-* 信号处理: 1
+* JSP: 1
 * Applied Sciences: 1
 * npj-Acoustics: 1
-* ICASSP: 11
+* ICASSP: 14
 * Interspeech: 16
 * EMNLP: 1
 * NAACL-HLT: 1
-* ASRU: 8
+* ASRU: 13
 * SLT: 2
 * WASPAA: 2
 * ISCSLP: 2
@@ -90,6 +90,12 @@ This is a byline example.
 <!-- <ul>{% for post in site.talks reversed %}
     {% include archive-single-talk-cv.html  %}
   {% endfor %}</ul> -->
+* **[2025.11]** 面向鲁棒语音识别的语音增强研究
+  * @ 中国移动九天研究院
+  * 主持人：罗笑雪 博士
+* **[2025.10]** 面向通用场景的语音增强研究：URGENT 系列挑战赛回顾
+  * @ 全国人机语音通讯学术会议（NCMMSC）青年论坛（https://www.ncmmsc.org.cn/qnlt/）
+  * 主持人：[李明](https://sites.duke.edu/dkusmiip/) 教授
 * **[2024.08]** 鸡尾酒会场景下的多人语音增强与识别研究进展
   * @ 武汉大学
   * 主持人：[黄公平](https://www.researchgate.net/profile/Gongping-Huang) 教授
@@ -115,6 +121,7 @@ This is a byline example.
 
 获得荣誉（节选）
 ======
+* **[2025.10]** 中国计算机学会语音对话与听觉专委会“博士学位论文激励计划”奖励（唯一获奖）
 * **[2024.11]** EMNLP 2024 最佳论文奖（共 5 篇获奖论文）
 * **[2023.12]** ASRU 2023 最佳审稿人奖（共 13 名获奖者）
 * **[2021.10]** 微软学者（亚太地区共 11 名获奖者）
@@ -122,6 +129,9 @@ This is a byline example.
 
 学术活动
 ======
+* **[2025.09-2025.12]** [URGENT 2026 语音增强挑战赛](https://urgent-challenge.github.io/urgent2026/)
+  * 全球共 23 支参赛队伍
+  * 职责：项目成员
 * **[2024.11-2025.01]** [URGENT 2025 语音增强挑战赛](https://urgent-challenge.github.io/urgent2025/)
   * 全球共 21 支参赛队伍
   * 职责：项目成员

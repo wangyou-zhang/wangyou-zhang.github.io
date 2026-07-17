@@ -47,7 +47,7 @@ Publications
 
 > You can find the full publication list in [my Google Scholar profile]({{site.author.googlescholar}}).
 
-Till 2025-08-26, I have published 52 high-quality journal and conference papers (18 first-authored), including:
+Till 2026-07-17, I have published 60 high-quality journal and conference papers (19 first-authored), including:
 * TASLP: 2
 * SPM: 1
 * CSL: 1
@@ -55,11 +55,11 @@ Till 2025-08-26, I have published 52 high-quality journal and conference papers 
 * JSP: 1
 * Applied Sciences: 1
 * npj-Acoustics: 1
-* ICASSP: 11
+* ICASSP: 14
 * Interspeech: 16
 * EMNLP: 1
 * NAACL-HLT: 1
-* ASRU: 8
+* ASRU: 13
 * SLT: 2
 * WASPAA: 2
 * ISCSLP: 2
@@ -70,6 +70,12 @@ Selected Talks
 <!-- <ul>{% for post in site.talks reversed %}
     {% include archive-single-talk-cv.html  %}
   {% endfor %}</ul> -->
+* **[2025.11]** Speech Enhancement Research towards Robust Speech Recognition
+  * @ CMCC Jiutian Research Institute
+  * Host: Dr. Xiaoxue Luo
+* **[2025.10]** Speech Enhancement Research towards Universal Scenarios: A Review of the URGENT Challenges
+  * @ NCMMSC Young Forum（https://www.ncmmsc.org.cn/qnlt/）
+  * Host: Prof. [Ming Li](https://sites.duke.edu/dkusmiip/)
 * **[2024.08]** Research Progress in Multi-talker Speech Enhancement and Recognition under the Cocktail Party Scenario
   * @ Wuhan University
   * Host: Prof. [Gongping Huang](https://www.researchgate.net/profile/Gongping-Huang)
@@ -95,6 +101,7 @@ Selected Talks
 
 Selected Honors
 ======
+* **[2025.10]** Doctoral Dissertation Incentive Plan of CCF Speech, Dialogue and Auditory Processing Technical Committee (in total 1 awardee)
 * **[2024.11]** Best Paper Award in EMNLP 2024 (in total 5 awardees)
 * **[2023.12]** Best Reviewer Award in ASRU 2023 (in total 13 awardees)
 * **[2021.10]** Microsoft Fellowship (in total 11 awardees in the Asia-Pacific region)
@@ -102,6 +109,9 @@ Selected Honors
 
 Academic Activities
 ======
+* **[2025.09-2025.12]** [URGENT 2026 Challenge](https://urgent-challenge.github.io/urgent2026/)
+  * In total 23 participating teams worldwide
+  * Role: Project member
 * **[2024.11-2025.01]** [URGENT 2025 Challenge](https://urgent-challenge.github.io/urgent2025/)
   * In total 20 participating teams worldwide
   * Role: Project member
