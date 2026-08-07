@@ -285,6 +285,7 @@ name: ethics
     + 作者名单中包含未实际参与研究工作、贡献微小的人员（赠送署名）
         + 合作者的基本贡献：参与研究构思/设计实验/分析数据/撰写论文/论文审校等
         + <span class="blue">如果论文被 desk reject 或撤稿，所有合作者都有责任</span>
+            + This paper is desk rejected because the Github URL reveals the author's identity (https://xxxx.github.io/xxx/), which is linked in the introduction. This breaks double blind review.
     + 忽略了对研究工作有实质贡献的人员
 
 ---
@@ -347,6 +348,7 @@ name: ethics
 # 从审稿的视角了解学术论文的规范性
 
 + [IEEE Transaction 的审稿准则](https://signalprocessingsociety.org/publications-resources/guidelines-reviewers)
++ [Interspeech Reviewer Handbook](https://wiki-is.isca-speech.org/en/Technical-Programme/Reviewer-handbook/Reviewing-instructions)
 + [Elsevier - How to conduct a review](https://www.elsevier.com/reviewer/how-to-review)
 
 
