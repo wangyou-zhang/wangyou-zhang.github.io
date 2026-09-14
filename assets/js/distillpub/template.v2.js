@@ -4346,7 +4346,7 @@ d-citation-list .references .title {
 <style>
 
 code {
-  white-space: nowrap;
+  white-space: pre;
   background: var(--global-code-background-color);
   border-radius: 2px;
   padding: 4px 7px;
@@ -4356,6 +4356,8 @@ code {
 
 pre code {
   display: block;
+  white-space: pre;
+  overflow-x: auto;
   border-left: 4px solid var(--global-dark-border-color);
   padding: 0 0 0 36px;
 }

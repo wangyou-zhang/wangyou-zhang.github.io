@@ -494,6 +494,7 @@ name: references
 
 # 引用参考文献的规范性
 
++ 只要不是你本人创造的观点、内容、图表和数据，就一定要给出参考文献或者注明来源
 + 不盲信 Google Scholar，比如
     + 它上面的 NeurIPS 论文的 BibTeX 通常都是错误格式（article 期刊类型），实则应为 inproceedings 会议类型
     + 它上面的很多 arXiv 论文实则已经正式发表，如 ICLR、Interspeech 等，应尽量引用正式发表的版本（经过同行评审，更具可信度）
